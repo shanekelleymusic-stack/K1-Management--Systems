@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>K1 Management Systems — Field Prototype</title>
+<style>
+:root{--blue:#0967d8;--blue2:#0b4fa7;--ink:#101820;--gray:#6b7280;--mid:#d9dde3;--bg:#f4f6f8;--white:#fff;--good:#16803b;--warn:#b86b00;--bad:#d92d20}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Arial;background:#0c1117;color:var(--ink)}button,input,select,textarea{font:inherit}.app{max-width:480px;margin:auto;min-height:100vh;background:var(--bg);position:relative;padding-bottom:84px}.top{background:linear-gradient(135deg,#0b1118,#15202b);background-size:cover;background-position:center;color:#fff;padding:18px 18px 14px;position:sticky;top:0;z-index:5}.top.hasPhoto:before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,#07111ddd,#07111d88);z-index:0}.top>*{position:relative;z-index:1}.brand{display:flex;align-items:center;justify-content:space-between}.k1{font-weight:900;font-size:26px;letter-spacing:-2px}.venueLogo{width:54px;height:54px;border:1px solid #506070;border-radius:10px;display:grid;place-items:center;font-size:10px;text-align:center;background:#111b25;overflow:hidden}.venueLogo img{width:100%;height:100%;object-fit:contain;background:white}.venue{margin-top:12px}.venue select{width:100%;padding:10px;border-radius:9px;border:1px solid #536171;background:#111b25;color:white}.content{padding:14px}.hero{background:linear-gradient(135deg,#0a4f9d,#0d76e8);color:white;border-radius:16px;padding:16px;box-shadow:0 8px 24px #0b4fa733}.hero h2{margin:0 0 4px}.small{font-size:12px;color:#64748b}.hero .small{color:#dbeafe}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.card{background:white;border:1px solid #e0e4e9;border-radius:14px;padding:14px;box-shadow:0 2px 8px #1111}.metric{font-size:28px;font-weight:800}.good{color:var(--good)}.bad{color:var(--bad)}.bar{height:7px;background:#e7ebef;border-radius:8px;margin-top:8px;overflow:hidden}.bar i{display:block;height:100%;background:var(--blue)}.sectionTitle{font-size:15px;font-weight:800;margin:18px 2px 9px;display:flex;justify-content:space-between}.row{background:white;border:1px solid #e0e4e9;border-radius:12px;padding:13px;margin:8px 0;display:flex;justify-content:space-between;gap:10px;align-items:center}.row strong{display:block}.pill{font-size:11px;padding:4px 7px;border-radius:20px;background:#e8f2ff;color:#0759b5;white-space:nowrap}.pill.red{background:#feeceb;color:#b42318}.pill.green{background:#e8f7ed;color:#147a35}.btn{border:0;border-radius:10px;padding:12px 14px;background:var(--blue);color:white;font-weight:700;cursor:pointer}.btn.secondary{background:#e9edf2;color:#18212a}.btn.dark{background:#111820}.full{width:100%}.quick{display:grid;grid-template-columns:1fr 1fr;gap:9px}.quick button{min-height:66px}.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(480px,100%);height:72px;background:white;border-top:1px solid #dce1e7;display:grid;grid-template-columns:repeat(5,1fr);z-index:10}.nav button{border:0;background:white;font-size:10px;color:#475569}.nav b{display:block;font-size:20px;margin-bottom:2px;color:#17202a}.nav .active,.nav .active b{color:var(--blue)}.screen{display:none}.screen.active{display:block}.form label{display:block;font-size:12px;font-weight:700;margin:12px 0 5px}.form input,.form select,.form textarea{width:100%;border:1px solid #ccd3db;border-radius:9px;padding:11px;background:white}.form textarea{min-height:92px}.tabs{display:flex;gap:7px;margin:10px 0}.tabs button{flex:1;padding:8px;border:1px solid #ccd3db;border-radius:8px;background:white}.tabs .sel{background:var(--blue);color:white}.assetHead{display:flex;gap:12px;align-items:center}.assetIcon{width:72px;height:72px;border-radius:12px;background:#dce7f4;display:grid;place-items:center;font-size:34px}.toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%);background:#111820;color:white;padding:11px 15px;border-radius:10px;z-index:20;display:none;max-width:420px;width:calc(100% - 36px);text-align:center}.modal{position:fixed;inset:0;background:#0009;z-index:30;display:none;align-items:end;justify-content:center}.sheet{background:white;width:min(480px,100%);border-radius:20px 20px 0 0;padding:20px;max-height:90vh;overflow:auto}.close{float:right;border:0;background:#eee;border-radius:50%;width:32px;height:32px}.logoInput{font-size:11px;margin-top:8px}.scanner{height:310px;background:linear-gradient(#17212b,#05080b);border-radius:16px;display:grid;place-items:center;color:white;position:relative;overflow:hidden}.scanbox{width:190px;height:190px;border:3px solid #1e90ff;border-radius:10px;display:grid;place-items:center;font-size:60px}.scanline{position:absolute;width:180px;height:2px;background:#3ba0ff;animation:scan 2s infinite}@keyframes scan{0%{transform:translateY(-80px)}50%{transform:translateY(80px)}100%{transform:translateY(-80px)}}.muted{color:#6b7280}.split{display:flex;justify-content:space-between;gap:10px}.logoSettings{margin-top:12px;padding-top:12px;border-top:1px solid #334155}.customize{display:grid;grid-template-columns:1fr 1fr;gap:10px}.woActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.detailLine{padding:9px 0;border-bottom:1px solid #e5e7eb}.note{background:#f8fafc;border-left:3px solid var(--blue);padding:10px;margin:8px 0;border-radius:6px}
+</style>
+</head>
+<body><div class="app">
+<header class="top">
+ <div class="brand"><div><div class="k1">K1</div><div style="font-size:10px;letter-spacing:1.5px">MANAGEMENT SYSTEMS</div></div><div class="venueLogo" id="venueLogo"><span style="font-weight:800;font-size:8px;line-height:1.1">BOEING<br>CENTER<br><span style="font-weight:500">AT TECH PORT</span></span></div></div>
+ <div class="venue"><select id="venueSelect"><option>Boeing Center at Tech Port — San Antonio</option><option>Regional Venue — Dallas</option><option>Regional Venue — Tampa</option></select></div>
+ <div class="logoSettings"><div class="customize"><label style="font-size:11px">Venue logo<input class="logoInput" id="logoUpload" type="file" accept="image/*"></label><label style="font-size:11px">Header photo<input class="logoInput" id="headerUpload" type="file" accept="image/*"></label></div></div>
+</header>
+
+<main class="content">
+<section id="home" class="screen active">
+ <div class="hero"><div class="small">VENUE FACILITIES</div><h2>Good afternoon, Shane</h2><div>Today’s maintenance overview</div></div>
+ <div class="tabs"><button onclick="period('Day',this)">Day</button><button class="sel" onclick="period('Month',this)">Month</button><button onclick="period('YTD',this)">YTD</button></div>
+ <div class="grid">
+  <div class="card"><div class="small">RM COMPLETION</div><div class="metric good" id="rmPct">78%</div><div class="bar"><i id="rmBar" style="width:78%"></i></div><div class="small">Target ≥ 70%</div></div>
+  <div class="card"><div class="small">PM COMPLIANCE</div><div class="metric good" id="pmPct">82%</div><div class="bar"><i id="pmBar" style="width:82%"></i></div><div class="small">Target ≥ 70%</div></div>
+  <div class="card"><div class="small">OPEN WORK ORDERS</div><div class="metric" id="openCount">18</div><div class="small"><span class="bad" id="overdueCount">4 overdue</span></div></div>
+  <div class="card"><div class="small">PMs THIS WEEK</div><div class="metric">12</div><div class="small">6 contractor visits</div></div>
+ </div>
+ <div class="sectionTitle"><span>Upcoming work</span><span class="small">Today</span></div>
+ <div id="upcoming"></div>
+ <div class="sectionTitle">Quick actions</div>
+ <div class="quick">
+  <button class="btn" onclick="openWO('Reactive Maintenance')">＋ RM Work Order</button>
+  <button class="btn" onclick="openWO('Preventive Maintenance')">＋ PM Work Order</button>
+  <button class="btn dark" onclick="showScreen('scan')">▣ Scan Asset QR</button>
+  <button class="btn secondary" onclick="openRequest()">＋ Maintenance Request</button>
+  <button class="btn secondary" onclick="openWO('Upgrade / Project')">＋ Upgrade / Project</button>
+  <button class="btn secondary" onclick="showScreen('assets')">⚙ Browse Assets</button>
+  <button class="btn secondary" onclick="showScreen('workorders')">☷ All Work Orders</button>
+  <button class="btn secondary" onclick="showScreen('calendar')">▦ Calendar / Outlook</button>
+ </div>
+</section>
+
+<section id="woCreate" class="screen"><button class="btn secondary" onclick="showScreen('home')">← Cancel</button><h2 id="createHeading">Create Work Order</h2><div class="form"><label>Work Type</label><select id="fType"><option>Reactive Maintenance</option><option>Preventive Maintenance</option><option>Upgrade / Project</option><option>Inspection</option><option>Event Work</option></select><label>Title *</label><input id="fTitle" placeholder="What work is needed?"><label>Asset</label><input id="fAsset" placeholder="Asset ID or equipment"><label>Location *</label><input id="fLocation" placeholder="Area / room / location"><label>Priority</label><select id="fPriority"><option>Low</option><option selected>Normal</option><option>High</option><option>Critical</option></select><label>Requested By</label><input id="fRequested" value="Shane Kelley"><label>Assign To</label><select id="fAssigned"><option>Shane Kelley</option><option>Jordan Lee</option><option>Chris Taylor</option><option>Vendor / Contractor</option><option>Unassigned</option></select><label>Scheduled Date</label><input id="fScheduled" type="date"><label>Due Date</label><input id="fDue" type="date"><label>Description / Scope</label><textarea id="fDescription" placeholder="Describe the issue, requested work, or scope..."></textarea><label>Photo</label><input type="file" accept="image/*" capture="environment"><button class="btn full" style="margin-top:16px" onclick="createWO()">Create & Open Work Order</button></div></section>
+<section id="woEdit" class="screen"><div id="woEditBody"></div></section>
+<section id="workorders" class="screen">
+ <div class="sectionTitle"><span>Work Orders</span><button class="btn" onclick="openWO('Reactive Maintenance')">＋ New</button></div>
+ <div class="quick" style="margin-bottom:10px"><button class="btn secondary" onclick="toast('Select mode: choose multiple work orders, then close them together')">☑ Select / Bulk Close</button></div><div id="woList"></div>
+</section><section id="woDetail" class="screen"><div id="woDetailBody"></div></section>
+
+<section id="scan" class="screen">
+ <h2>Scan Asset QR Code</h2><p class="muted">Simulated scanner for this field prototype.</p>
+ <div class="scanner" onclick="scanAsset()"><div class="scanbox">▣</div><div class="scanline"></div></div>
+ <button class="btn full" style="margin-top:12px" onclick="scanAsset()">Simulate scan: AHU-04</button>
+</section>
+
+<section id="asset" class="screen">
+ <div class="card"><div class="assetHead"><div class="assetIcon">❄</div><div><div class="small">ASSET</div><h2 style="margin:2px 0">AHU-04</h2><span class="pill green">Operational</span> <span class="pill">High Criticality</span></div></div>
+ <hr style="border:0;border-top:1px solid #e5e7eb;margin:15px 0">
+ <div class="split"><span class="muted">Location</span><strong>Mech Room 204</strong></div><div class="split"><span class="muted">System</span><strong>HVAC</strong></div><div class="split"><span class="muted">Manufacturer</span><strong>Trane</strong></div><div class="split"><span class="muted">Model</span><strong>TAHC-1200</strong></div>
+ </div>
+ <button class="btn full" style="margin-top:12px" onclick="openWO('Reactive Maintenance','AHU-04')">＋ Create Work Order</button>
+ <div class="sectionTitle">Open work</div><div class="row"><div><strong>BCTP-PM-1045</strong><div class="small">Quarterly AHU service</div></div><span class="pill">Scheduled</span></div>
+ <div class="sectionTitle">Upcoming PM</div><div class="row"><div><strong>Quarterly AHU Service</strong><div class="small" id="pmSchedule">Sep 29 · 9:00 AM · CoolAir Services</div></div><button class="btn secondary" onclick="reschedule()">Reschedule</button></div>
+</section>
+
+
+<section id="calendar" class="screen">
+ <div class="sectionTitle"><span>Maintenance Calendar</span><button class="btn" onclick="toast('Outlook sync is simulated in this prototype')">Sync Outlook</button></div>
+ <div class="card"><div class="small">TODAY</div><h2>Field Schedule</h2><div class="row"><div><strong>9:00 AM · AHU-04</strong><div class="small">Quarterly PM · CoolAir Services</div></div><span class="pill">PM</span></div><div class="row"><div><strong>11:30 AM · Concourse</strong><div class="small">Lighting repair · Jordan Lee</div></div><span class="pill red">RM</span></div><div class="row"><div><strong>2:00 PM · Backstage</strong><div class="small">LED upgrade walk-through</div></div><span class="pill">UP</span></div></div>
+</section>
+
+<section id="assets" class="screen">
+ <div class="sectionTitle"><span>Assets</span><button class="btn" onclick="showScreen('scan')">Scan QR</button></div>
+ <div class="form"><input placeholder="Search asset, location, serial number..." oninput="toast('Asset search is active in the next build')"></div>
+ <div class="row" onclick="showScreen('asset')"><div><strong>AHU-04</strong><div class="small">HVAC · Mechanical Room 204</div></div><span class="pill green">Operational</span></div>
+ <div class="row"><div><strong>RTS-01</strong><div class="small">Retractable Seating · Arena Bowl</div></div><span class="pill green">Operational</span></div>
+ <div class="row"><div><strong>GEN-01</strong><div class="small">Emergency Generator · Exterior Yard</div></div><span class="pill">PM Due</span></div>
+ <div class="row"><div><strong>FRY-03</strong><div class="small">Kitchen Fryer · Main Kitchen</div></div><span class="pill red">Out of Service</span></div>
+</section>
+<section id="requests" class="screen"><h2>Maintenance Requests</h2><button class="btn full" onclick="openRequest()">＋ Submit Request</button><div class="sectionTitle">Recent</div><div class="row"><div><strong>Leaking faucet — Suite 214</strong><div class="small">Submitted by Event Operations</div></div><span class="pill">New</span></div></section>
+</main>
+
+<nav class="nav">
+<button class="active" onclick="showScreen('home',this)"><b>⌂</b>Home</button>
+<button onclick="showScreen('workorders',this)"><b>＋</b>Work Orders</button>
+<button onclick="showScreen('scan',this)"><b>▣</b>Scan QR</button>
+<button onclick="showScreen('requests',this)"><b>☵</b>Request</button>
+<button onclick="openMore()"><b>☰</b>More</button>
+</nav></div>
+
+<div class="toast" id="toast"></div>
+<div class="modal" id="modal"><div class="sheet"><button class="close" onclick="closeModal()">×</button><div id="modalBody"></div></div></div>
+
+<script>
+const seedWorkOrders=[
+{id:'BCTP-PM-1045',type:'Preventive Maintenance',title:'AHU-04 Quarterly Service',asset:'AHU-04',status:'Scheduled',due:'Sep 29',overdue:false},
+{id:'BCTP-RM-2481',type:'Reactive Maintenance',title:'Concourse Lighting Issue',asset:'CL-12',status:'In Progress',due:'Sep 25',overdue:true},
+{id:'BCTP-UP-0127',type:'Upgrade / Project',title:'Backstage LED Upgrade',asset:'',status:'Scheduled',due:'Oct 2',overdue:false}
+];
+let workOrders=JSON.parse(localStorage.getItem('k1_workorders')||'null')||seedWorkOrders;workOrders=workOrders.map(w=>({...w,location:w.location||'Boeing Center at Tech Port',priority:w.priority||'Normal',assigned:w.assigned||'Shane Kelley',notes:w.notes||[],labor:w.labor||[],parts:w.parts||[]}));let activeWO=null;function saveData(){try{localStorage.setItem('k1_workorders',JSON.stringify(workOrders))}catch(e){toast('Saved for this session')}}
+function render(){
+ document.getElementById('woList').innerHTML=workOrders.map(w=>`<div class="row" onclick="openWODetail('${w.id}')"><div><strong>${w.id}</strong><div>${w.title}</div><div class="small">${w.type} · ${w.asset||'Facility'}</div></div><span class="pill ${w.overdue?'red':''}">${w.status}</span></div>`).join('');
+ document.getElementById('upcoming').innerHTML=workOrders.slice(0,3).map(w=>`<div class="row"><div><strong>${w.title}</strong><div class="small">${w.id} · Due ${w.due}</div></div><span class="pill ${w.overdue?'red':''}">${w.status}</span></div>`).join('');
+ let active=workOrders.filter(w=>!['Completed','Verified / Closed'].includes(w.status));document.getElementById('openCount').textContent=active.length;document.getElementById('overdueCount').textContent=active.filter(w=>w.overdue).length+' overdue';let rm=workOrders.filter(w=>w.type==='Reactive Maintenance'),pm=workOrders.filter(w=>w.type==='Preventive Maintenance');let rp=rm.length?Math.round(rm.filter(w=>['Completed','Verified / Closed'].includes(w.status)).length/rm.length*100):100,pp=pm.length?Math.round(pm.filter(w=>['Completed','Verified / Closed'].includes(w.status)).length/pm.length*100):100;document.getElementById('rmPct').textContent=rp+'%';document.getElementById('pmPct').textContent=pp+'%';document.getElementById('rmPct').className='metric '+(rp>=70?'good':'bad');document.getElementById('pmPct').className='metric '+(pp>=70?'good':'bad');document.getElementById('rmBar').style.width=rp+'%';document.getElementById('pmBar').style.width=pp+'%';
+}
+function showScreen(id,btn){
+ document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active')); document.getElementById(id).classList.add('active');
+ document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active')); if(btn)btn.classList.add('active'); window.scrollTo(0,0)
+}
+function openWO(type,asset=''){showScreen('woCreate');document.getElementById('fType').value=type||'Reactive Maintenance';document.getElementById('fAsset').value=asset||'';document.getElementById('fTitle').value='';document.getElementById('fLocation').value='';document.getElementById('fPriority').value='Normal';document.getElementById('fAssigned').value='Shane Kelley';document.getElementById('fScheduled').value='';document.getElementById('fDue').value='';document.getElementById('fDescription').value='';document.getElementById('fTitle').focus()}
+function createWO(){let title=document.getElementById('fTitle').value.trim(),loc=document.getElementById('fLocation').value.trim();if(!title||!loc){toast('Please enter a title and location');return}let type=document.getElementById('fType').value,asset=document.getElementById('fAsset').value.trim(),prefix=type.startsWith('Preventive')?'PM':type.startsWith('Upgrade')?'UP':type.startsWith('Inspection')?'IN':type.startsWith('Event')?'EV':'RM';let seq=2500+workOrders.length+1,id='BCTP-'+prefix+'-'+seq;workOrders.unshift({id,type,title,asset,location:loc,priority:document.getElementById('fPriority').value,requestedBy:document.getElementById('fRequested').value,assigned:document.getElementById('fAssigned').value,status:'Requested',scheduled:document.getElementById('fScheduled').value,due:document.getElementById('fDue').value||'Unscheduled',overdue:false,description:document.getElementById('fDescription').value,notes:[],labor:[],parts:[],created:new Date().toISOString(),completed:null});saveData();render();openWODetail(id);toast(id+' created')}
+function openWODetail(id){activeWO=id;let w=workOrders.find(x=>x.id===id);if(!w)return;w.notes=w.notes||[];w.labor=w.labor||[];w.parts=w.parts||[];document.getElementById('woDetailBody').innerHTML=`<button class="btn secondary" onclick="showScreen('workorders')">← Work Orders</button><div class="card" style="margin-top:10px"><div class="small">${w.type}</div><h2 style="margin:3px 0">${w.id}</h2><h3>${w.title}</h3><span class="pill ${w.overdue?'red':w.status==='Completed'?'green':''}">${w.status}</span><div class="detailLine">Asset <strong style="float:right">${w.asset||'Facility / General'}</strong></div><div class="detailLine">Location <strong style="float:right">${w.location||'—'}</strong></div><div class="detailLine">Assigned <strong style="float:right">${w.assigned||'Unassigned'}</strong></div><div class="detailLine">Due <strong style="float:right">${w.due}</strong></div><p>${w.description||'No description entered.'}</p><div class="woActions"><button class="btn" onclick="editWO()">Edit Work Order</button><button class="btn" onclick="changeStatus()">Change Status</button><button class="btn secondary" onclick="addNote()">＋ Field Note</button><button class="btn secondary" onclick="addLabor()">＋ Labor</button><button class="btn secondary" onclick="addPart()">＋ Part</button><button class="btn dark" onclick="completeWO()">✓ Complete</button></div></div><div class="sectionTitle">Field Notes</div>${w.notes.map(n=>`<div class="note">${n}</div>`).join('')||'<div class="small">No notes yet.</div>'}<div class="sectionTitle">Labor</div>${w.labor.map(n=>`<div class="row">${n}</div>`).join('')||'<div class="small">No labor entries.</div>'}<div class="sectionTitle">Parts / Materials</div>${w.parts.map(n=>`<div class="row">${n}</div>`).join('')||'<div class="small">No parts recorded.</div>'}`;showScreen('woDetail')}
+function editWO(){let w=workOrders.find(x=>x.id===activeWO);document.getElementById('woEditBody').innerHTML=`<button class="btn secondary" onclick="openWODetail('${w.id}')">← Cancel</button><h2>Edit ${w.id}</h2><div class="form"><label>Title</label><input id="eTitle" value="${esc(w.title)}"><label>Asset</label><input id="eAsset" value="${esc(w.asset||'')}"><label>Location</label><input id="eLocation" value="${esc(w.location||'')}"><label>Priority</label><select id="ePriority"><option>Low</option><option>Normal</option><option>High</option><option>Critical</option></select><label>Assigned To</label><select id="eAssigned"><option>Shane Kelley</option><option>Jordan Lee</option><option>Chris Taylor</option><option>Vendor / Contractor</option><option>Unassigned</option></select><label>Scheduled Date</label><input id="eScheduled" type="date" value="${w.scheduled||''}"><label>Due Date</label><input id="eDue" type="date" value="${/^\d{4}-/.test(w.due)?w.due:''}"><label>Description / Scope</label><textarea id="eDescription">${esc(w.description||'')}</textarea><button class="btn full" onclick="saveWOEdit()">Save Changes</button></div>`;showScreen('woEdit');document.getElementById('ePriority').value=w.priority||'Normal';document.getElementById('eAssigned').value=w.assigned||'Unassigned'}
+function saveWOEdit(){let w=workOrders.find(x=>x.id===activeWO);w.title=document.getElementById('eTitle').value;w.asset=document.getElementById('eAsset').value;w.location=document.getElementById('eLocation').value;w.priority=document.getElementById('ePriority').value;w.assigned=document.getElementById('eAssigned').value;w.scheduled=document.getElementById('eScheduled').value;w.due=document.getElementById('eDue').value||w.due;w.description=document.getElementById('eDescription').value;saveData();render();openWODetail(activeWO);toast('Work order updated')}
+function esc(v){return String(v??'').replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;').replaceAll('>','&gt;')}
+function changeStatus(){document.getElementById('modalBody').innerHTML=`<h2>Change Status</h2><div class="form"><select id="newStatus"><option>Requested</option><option>Approved / Triaged</option><option>Scheduled</option><option>In Progress</option><option>Waiting - Parts</option><option>Waiting - Vendor</option><option>Completed</option><option>Verified / Closed</option></select><button class="btn full" onclick="saveStatus()">Save</button></div>`;openModal()}
+function saveStatus(){let w=workOrders.find(x=>x.id===activeWO);w.status=document.getElementById('newStatus').value;if(w.status.includes('Completed')||w.status.includes('Closed')){w.overdue=false;w.completed=w.completed||new Date().toISOString()}else{w.completed=null}saveData();render();closeModal();openWODetail(activeWO)}
+function addNote(){document.getElementById('modalBody').innerHTML=`<h2>Add Field Note</h2><div class="form"><textarea id="fieldNote" placeholder="What did you find or do?"></textarea><label>Photo</label><input type="file" accept="image/*" capture="environment"><button class="btn full" onclick="saveNote()">Add Note</button></div>`;openModal()}
+function saveNote(){let w=workOrders.find(x=>x.id===activeWO),v=document.getElementById('fieldNote').value;if(v)(w.notes||(w.notes=[])).push(v);saveData();closeModal();openWODetail(activeWO)}
+function addLabor(){document.getElementById('modalBody').innerHTML=`<h2>Add Labor</h2><div class="form"><input id="laborTech" value="Shane Kelley"><label>Hours</label><input id="laborHours" type="number" step=".25" value="1"><button class="btn full" onclick="saveLabor()">Add Labor</button></div>`;openModal()}
+function saveLabor(){let w=workOrders.find(x=>x.id===activeWO);(w.labor||(w.labor=[])).push(document.getElementById('laborTech').value+' · '+document.getElementById('laborHours').value+' hr');saveData();closeModal();openWODetail(activeWO)}
+function addPart(){document.getElementById('modalBody').innerHTML=`<h2>Add Part / Material</h2><div class="form"><input id="partName" placeholder="Part or material"><label>Quantity</label><input id="partQty" type="number" value="1"><button class="btn full" onclick="savePart()">Add Part</button></div>`;openModal()}
+function savePart(){let w=workOrders.find(x=>x.id===activeWO);(w.parts||(w.parts=[])).push(document.getElementById('partName').value+' · Qty '+document.getElementById('partQty').value);saveData();closeModal();openWODetail(activeWO)}
+function completeWO(){let w=workOrders.find(x=>x.id===activeWO);w.status='Completed';w.overdue=false;w.completed=new Date().toISOString();(w.notes||(w.notes=[])).push('Work completed in field.');saveData();render();openWODetail(activeWO);toast('Work order completed')}
+function openRequest(){
+ document.getElementById('modalBody').innerHTML=`<h2>New Maintenance Request</h2><div class="form"><label>What's wrong?</label><textarea id="rDesc" placeholder="Example: Sink leaking in Suite 214"></textarea><label>Location</label><input placeholder="Area / room / location"><label>Urgency</label><select><option>Routine</option><option>Needs attention soon</option><option>Urgent / operational impact</option></select><label>Add photo</label><input type="file" accept="image/*" capture="environment"><button class="btn full" onclick="closeModal();toast('Maintenance request submitted')">Submit Request</button></div>`;openModal()
+}
+function reschedule(){
+ document.getElementById('modalBody').innerHTML=`<h2>Reschedule PM</h2><div class="form"><label>Current</label><input disabled value="Sep 29 · 9:00 AM"><label>New date</label><input id="newDate" type="date"><label>New time</label><input id="newTime" type="time"><label>Reason</label><select><option>Contractor availability</option><option>Event conflict</option><option>Parts unavailable</option><option>Access issue</option></select><button class="btn full" onclick="saveReschedule()">Save Schedule Change</button></div>`;openModal()
+}
+function saveReschedule(){let d=document.getElementById('newDate').value||'2026-10-01',t=document.getElementById('newTime').value||'13:00';document.getElementById('pmSchedule').textContent=d+' · '+t+' · CoolAir Services';closeModal();toast('PM rescheduled. Original schedule retained in audit history.')}
+function scanAsset(){showScreen('asset');toast('Asset found: AHU-04')}
+function openMore(){
+ document.getElementById('modalBody').innerHTML=`<h2>K1 Modules</h2>
+ <div class="quick">
+ <button class="btn secondary" onclick="closeModal();showScreen('assets')">⚙ Assets</button>
+ <button class="btn secondary" onclick="closeModal();showScreen('calendar')">▦ Calendar</button>
+ <button class="btn secondary" onclick="closeModal();toast('Reports module opens in the next build')">▥ Reports</button>
+ <button class="btn secondary" onclick="closeModal();toast('Vendor module opens in the next build')">◉ Vendors</button>
+ <button class="btn secondary" onclick="closeModal();toast('User and venue permissions open in the next build')">♙ Users</button>
+ <button class="btn secondary" onclick="closeModal();toast('Settings open in the next build')">⚙ Settings</button>
+ </div>`;openModal()
+}
+function period(p,b){b.parentElement.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');render();toast(p+' view — prototype metrics use saved work orders')}
+function openModal(){document.getElementById('modal').style.display='flex'}function closeModal(){document.getElementById('modal').style.display='none'}
+function toast(s){let t=document.getElementById('toast');t.textContent=s;t.style.display='block';setTimeout(()=>t.style.display='none',2500)}
+function loadCustomizations(){let logo=localStorage.getItem('k1_venue_logo');if(logo)document.getElementById('venueLogo').innerHTML=`<img src="${logo}">`;let bg=localStorage.getItem('k1_header_bg');if(bg){let h=document.querySelector('.top');h.style.backgroundImage=`url("${bg}")`;h.classList.add('hasPhoto')}}
+document.getElementById('logoUpload').addEventListener('change',e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{document.getElementById('venueLogo').innerHTML=`<img src="${r.result}">`;try{localStorage.setItem('k1_venue_logo',r.result)}catch(e){}};r.readAsDataURL(f)});
+document.getElementById('headerUpload').addEventListener('change',e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{let h=document.querySelector('.top');h.style.backgroundImage=`url("${r.result}")`;h.classList.add('hasPhoto');try{localStorage.setItem('k1_header_bg',r.result)}catch(e){};toast('Header photo updated')};r.readAsDataURL(f)});
+loadCustomizations();render();
+</script></body></html>
