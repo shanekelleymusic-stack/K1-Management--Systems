@@ -218,6 +218,190 @@ setupImageInput("logoUpload","k1_venue_logo","venueLogo",false);setupImageInput(
 const savedLogo=localStorage.getItem("k1_venue_logo");if(savedLogo)$("venueLogo").innerHTML='<img alt="Venue logo" src="'+savedLogo+'">';
 const savedBg=localStorage.getItem("k1_header_bg");if(savedBg){document.querySelector(".top").style.backgroundImage='url("'+savedBg+'")';document.querySelector(".top").classList.add("hasPhoto")}
 persist();render();
+</script></body></html><section id="home" class="screen active"><div class="hero"><div class="eyebrow">VENUE FACILITIES</div><h1>Good morning, Shane</h1><div>Facilities Management Dashboard</div></div>
+<div class="grid"><div class="card"><div class="small">RM COMPLETION</div><div id="rmPct" class="metric">0%</div><div class="bar"><i id="rmBar"></i></div></div><div class="card"><div class="small">PM COMPLIANCE</div><div id="pmPct" class="metric">0%</div><div class="bar"><i id="pmBar"></i></div></div><div class="card" role="button" tabindex="0" onclick="showOpenWorkOrders()" style="cursor:pointer"><div class="small">OPEN WORK ORDERS</div><div id="openCount" class="metric">0</div><div id="overdueCount" class="small"></div><div class="small" style="margin-top:7px;color:#0967d8;font-weight:750">View all open work orders →</div></div><div class="card" role="button" tabindex="0" onclick="go('requests')" style="cursor:pointer"><div class="small">MAINT. REQUESTS</div><div id="requestCount" class="metric">0</div><div class="small">Active requests</div><div class="small" style="margin-top:7px;color:#0967d8;font-weight:750">View all maintenance requests →</div></div></div>
+<div class="section">Upcoming Work <button class="btn alt" onclick="go('calendar')">View All</button></div><div id="upcoming"></div>
+<div class="section">Quick Actions</div><div class="quick"><button class="btn" onclick="openWO('Reactive Maintenance')">🛠 + Reactive Work Order</button><button class="btn" onclick="openWO('Preventative Maintenance')">▦ + Preventative Work Order</button><button class="btn" onclick="openWO('Upgrade / Project')">▥ + Upgrade / Project</button><button class="btn dark" onclick="go('scan')">▦ + Scan Asset QR Code</button><button class="btn alt" onclick="go('requestCreate')">☵ + Maintenance Request</button><button class="btn alt" onclick="go('calendar')">▦ View Calendar</button></div></section>
+
+<section id="workorders" class="screen"><div class="section"><span id="woPageTitle">Work Orders</span><button class="btn" onclick="openWO('Reactive Maintenance')">＋ New</button></div>
+<div class="woTools">
+<input id="woSearch" type="search" placeholder="Search ID, title, asset, location or assignee..." oninput="renderWorkOrders()">
+<div class="woTypeTabs">
+<button id="woTypeAll" class="sel" onclick="setWOType('All')">All</button>
+<button id="woTypeRM" onclick="setWOType('RM')">RM</button>
+<button id="woTypePM" onclick="setWOType('PM')">PM</button>
+<button id="woTypeProject" onclick="setWOType('Project')">Projects</button>
+</div>
+<div class="woFilterGrid">
+<select id="woStatus" onchange="renderWorkOrders()"><option value="All">All Statuses</option><option>Requested</option><option>Approved / Triaged</option><option>Scheduled</option><option>In Progress</option><option value="Waiting">Waiting (Any)</option><option>Completed</option><option>Verified / Closed</option></select>
+<select id="woPriority" onchange="renderWorkOrders()"><option value="All">All Priorities</option><option>Critical</option><option>High</option><option>Normal</option><option>Low</option></select>
+<select id="woSort" onchange="renderWorkOrders()"><option value="dueAsc">Due Date — Earliest</option><option value="dueDesc">Due Date — Latest</option><option value="priority">Priority — Highest</option><option value="newest">Newest Work Order</option></select>
+<select id="woScope" onchange="renderWorkOrders()"><option value="All">Open + Closed</option><option value="Open">Open Only</option><option value="Closed">Closed Only</option></select>
+</div>
+<div id="woResultCount" class="resultCount"></div>
+</div>
+<div class="actions"><button id="selectBtn" class="btn alt" onclick="toggleSelect()">Select Multiple</button><button id="bulkBtn" class="btn dark" style="display:none" onclick="bulkClose()">Close Selected</button></div><div id="woList"></div></section>
+
+<section id="woCreate" class="screen"><button class="btn alt" onclick="go('workorders')">← Cancel</button><h2>Create Work Order</h2><div class="form"><label>Work Type</label><select id="fType"><option>Reactive Maintenance</option><option>Preventative Maintenance</option><option>Upgrade / Project</option><option>Inspection</option><option>Event Work</option></select><label>Title *</label><input id="fTitle"><label>Asset</label><select id="fAsset" onchange="assetPicked()"></select><label>Location *</label><input id="fLocation"><label>Priority</label><select id="fPriority"><option>Low</option><option selected>Normal</option><option>High</option><option>Critical</option></select><label>Assigned To</label><select id="fAssigned"><option>Shane Kelley</option><option>Jordan Lee</option><option>Chris Taylor</option><option>Vendor / Contractor</option><option>Unassigned</option></select><label>Scheduled Date</label><input id="fScheduled" type="date"><label>Due Date</label><input id="fDue" type="date"><label>Description / Scope</label><textarea id="fDescription"></textarea><button class="btn full" style="margin-top:15px" onclick="createWO()">Create & Open Work Order</button></div></section>
+
+<section id="woDetail" class="screen"><div id="woDetailBody"></div></section>
+
+<section id="assets" class="screen"><div class="section"><span>Assets</span><button class="btn" onclick="openAssetCreate()">＋ New Asset</button></div><input id="assetSearch" oninput="renderAssets()" placeholder="Search assets..." style="width:100%;padding:11px;border:1px solid #ccd5df;border-radius:9px"><div id="assetList"></div></section>
+<section id="assetCreate" class="screen"><button class="btn alt" onclick="go('assets')">← Cancel</button><h2>Add New Asset</h2><div class="form"><label>Asset ID / Tag *</label><input id="aId" placeholder="AHU-05"><label>Asset Name *</label><input id="aName"><label>Category / System</label><select id="aCategory"><option>HVAC</option><option>Electrical</option><option>Plumbing</option><option>Kitchen Equipment</option><option>Retractable Seating</option><option>Concert / Event Equipment</option><option>Exterior / Lighting</option><option>Landscaping</option><option>Heavy Machinery</option><option>Building / Architectural</option><option>Life Safety</option><option>Other</option></select><label>Area / Location</label><input id="aLocation"><label>Manufacturer</label><input id="aManufacturer"><label>Model</label><input id="aModel"><label>Serial Number</label><input id="aSerial"><label>Criticality</label><select id="aCriticality"><option>Normal</option><option>High</option><option>Critical</option></select><label>Status</label><select id="aStatus"><option>Operational</option><option>Limited Service</option><option>Out of Service</option></select><label>Vendor</label><input id="aVendor"><label>Notes</label><textarea id="aNotes"></textarea><button class="btn full" style="margin-top:15px" onclick="saveAsset()">Save Asset</button></div></section>
+<section id="assetDetail" class="screen"><div id="assetDetailBody"></div></section>
+
+<section id="requests" class="screen"><div class="section"><span>Maintenance Requests</span><button class="btn" onclick="go('requestCreate')">＋ New</button></div><div id="requestList"></div></section>
+<section id="requestDetail" class="screen"><div id="requestDetailBody"></div></section>
+<section id="requestCreate" class="screen"><button class="btn alt" onclick="go('requests')">← Cancel</button><h2>New Maintenance Request</h2><div class="form"><label>What's wrong? *</label><textarea id="rIssue" placeholder="Describe the issue"></textarea><label>Location *</label><input id="rLocation"><label>Urgency</label><select id="rUrgency"><option>Routine</option><option>Important</option><option>Urgent</option></select><label>Photo</label><input id="rPhoto" type="file" accept="image/*" capture="environment"><button class="btn full" style="margin-top:15px" onclick="saveRequest()">Submit Request</button></div></section>
+
+<section id="scan" class="screen"><div class="moduleHero"><div class="eyebrow">ASSET TOOLS</div><h2>Scan Asset QR Code</h2><div>Camera integration placeholder</div></div><div class="card" style="text-align:center;padding:38px"><div style="font-size:70px">▦</div><h3>Point camera at asset QR code</h3><p class="small">For this prototype, choose an asset below to simulate a successful scan.</p><select id="scanAsset" style="width:100%;padding:11px"></select><button class="btn full" style="margin-top:12px" onclick="simulateScan()">Simulate Scan</button></div></section>
+
+<section id="pm" class="screen"></section><section id="projects" class="screen"></section><section id="venues" class="screen"></section><section id="reports" class="screen"></section><section id="inventory" class="screen"></section><section id="vendors" class="screen"></section><section id="calendar" class="screen"></section><section id="users" class="screen"></section><section id="settings" class="screen"></section><section id="more" class="screen"></section>
+</main>
+<nav class="nav"><button onclick="go('home')"><b>⌂</b>Home</button><button onclick="resetWOFilters();go('workorders')"><b>＋</b>Work Orders</button><button onclick="go('scan')"><b>▦</b>Scan QR</button><button onclick="go('requests')"><b>☵</b>Request</button><button onclick="go('more')"><b>☰</b>More</button></nav>
+</div><div id="modal" class="modal"><div class="sheet"><div id="modalBody"></div></div></div><div id="toast" class="toast"></div>
+<script>
+"use strict";
+const seedWO=[
+{id:"BCTP-PM-1045",type:"Preventative Maintenance",title:"AHU-04 Quarterly Service",asset:"AHU-04",location:"Mechanical Room 204",priority:"Normal",assigned:"Chris Taylor",status:"Scheduled",scheduled:"2026-09-28",due:"2026-09-28",notes:[],labor:[],parts:[]},
+{id:"BCTP-RM-2481",type:"Reactive Maintenance",title:"Concourse Lighting Issue",asset:"CL-12",location:"Level 2 Concourse",priority:"High",assigned:"Jordan Lee",status:"In Progress",scheduled:"2026-09-27",due:"2026-09-26",notes:["Multiple lights out in section 205 concourse."],labor:[],parts:[]},
+{id:"BCTP-UP-0127",type:"Upgrade / Project",title:"Backstage LED Upgrade",asset:"",location:"Back of House",priority:"Normal",assigned:"Vendor / Contractor",status:"Scheduled",scheduled:"2026-10-02",due:"2026-10-02",notes:[],labor:[],parts:[]},
+{id:"BCTP-PM-1046",type:"Preventative Maintenance",title:"Kitchen Hood Inspection",asset:"KH-01",location:"Main Kitchen",priority:"Normal",assigned:"Vendor / Contractor",status:"Completed",due:"2026-09-24",completed:"2026-09-24",notes:[],labor:[],parts:[]}
+];
+const seedAssets=[
+{id:"AHU-04",name:"Main Concourse Air Handler",category:"HVAC",location:"Level 2 - Mechanical Room 204",manufacturer:"Trane",model:"TAHC-1200",serial:"19384756",criticality:"High",status:"Operational",vendor:"CoolAir Services",notes:""},
+{id:"CL-12",name:"Concourse Lighting Circuit",category:"Electrical",location:"Level 2 Concourse",manufacturer:"",model:"",serial:"",criticality:"Normal",status:"Limited Service",vendor:"",notes:""},
+{id:"KH-01",name:"Kitchen Exhaust Hood",category:"Kitchen Equipment",location:"Main Kitchen",manufacturer:"CaptiveAire",model:"",serial:"",criticality:"High",status:"Operational",vendor:"ABC Fire Systems",notes:""},
+{id:"RTS-01",name:"Retractable Seating",category:"Retractable Seating",location:"Arena Bowl",manufacturer:"",model:"",serial:"",criticality:"High",status:"Operational",vendor:"",notes:""}
+];
+const seedRequests=[{id:"REQ-101",issue:"Loose handrail near Section 112",location:"Main Concourse",urgency:"Important",status:"New",created:"2026-09-27"}];
+let workOrders=load("k1_workorders",seedWO),assets=load("k1_assets",seedAssets),requests=load("k1_requests",seedRequests);
+workOrders.forEach(w=>{if(w.type==="Preventive Maintenance")w.type="Preventative Maintenance"});
+let activeWO="",activeAsset="",selecting=false,selected=new Set();
+function load(k,fallback){try{const v=JSON.parse(localStorage.getItem(k));return Array.isArray(v)&&v.length?v:fallback}catch(e){return fallback}}
+function persist(){localStorage.setItem("k1_workorders",JSON.stringify(workOrders));localStorage.setItem("k1_assets",JSON.stringify(assets));localStorage.setItem("k1_requests",JSON.stringify(requests))}
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function $(id){return document.getElementById(id)}
+function notify(msg){const t=$("toast");t.textContent=msg;t.style.display="block";setTimeout(()=>t.style.display="none",2200)}
+function go(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));const s=$(id);if(s)s.classList.add("active");render();window.scrollTo(0,0)}
+function isClosed(w){return w.status==="Completed"||w.status==="Verified / Closed"}
+function isOverdue(w){return !isClosed(w)&&w.due&&w.due!=="Unscheduled"&&new Date(w.due+"T23:59:59")<new Date()}
+function setWOType(type){
+ woTypeFilter=type;
+ ["All","RM","PM","Project"].forEach(t=>{const b=$("woType"+t);if(b)b.classList.toggle("sel",t===type)});
+ renderWorkOrders();
+}
+function woTypeMatches(w){
+ if(woTypeFilter==="All")return true;
+ if(woTypeFilter==="RM")return w.type==="Reactive Maintenance";
+ if(woTypeFilter==="PM")return w.type==="Preventative Maintenance"||w.type==="Preventive Maintenance";
+ if(woTypeFilter==="Project")return w.type==="Upgrade / Project";
+ return true;
+}
+function dueTime(w){
+ if(!w.due||w.due==="Unscheduled")return Number.POSITIVE_INFINITY;
+ const t=new Date(w.due+"T12:00:00").getTime();
+ return Number.isFinite(t)?t:Number.POSITIVE_INFINITY;
+}
+function renderWorkOrders(){
+ const list=$("woList");if(!list)return;
+ const search=($("woSearch")?.value||"").trim().toLowerCase();
+ const status=$("woStatus")?.value||"All",priority=$("woPriority")?.value||"All",scope=$("woScope")?.value||"All",sort=$("woSort")?.value||"dueAsc";
+ let rows=workOrders.filter(w=>{
+   if(!woTypeMatches(w))return false;
+   if(scope==="Open"&&isClosed(w))return false;
+   if(scope==="Closed"&&!isClosed(w))return false;
+   if(status!=="All"){
+     if(status==="Waiting"){if(!String(w.status||"").startsWith("Waiting"))return false}
+     else if(w.status!==status)return false;
+   }
+   if(priority!=="All"&&w.priority!==priority)return false;
+   if(search){
+     const hay=[w.id,w.title,w.asset,w.location,w.assigned,w.type,w.status,w.priority].join(" ").toLowerCase();
+     if(!hay.includes(search))return false;
+   }
+   return true;
+ });
+ const rank={Critical:4,High:3,Normal:2,Low:1};
+ rows.sort((a,b)=>{
+   if(sort==="dueDesc"){const ad=dueTime(a),bd=dueTime(b);if(ad===Infinity&&bd===Infinity)return 0;if(ad===Infinity)return 1;if(bd===Infinity)return -1;return bd-ad}
+   if(sort==="priority")return (rank[b.priority]||0)-(rank[a.priority]||0)||dueTime(a)-dueTime(b);
+   if(sort==="newest")return String(b.id).localeCompare(String(a.id),undefined,{numeric:true});
+   return dueTime(a)-dueTime(b);
+ });
+ if($("woResultCount"))$("woResultCount").textContent=rows.length+" work order"+(rows.length===1?"":"s")+" shown";
+ list.innerHTML=rows.map(w=>`<div class="row">${selecting?`<input class="check" type="checkbox" ${selected.has(w.id)?"checked":""} onchange="selectWO('${w.id}',this.checked)">`:""}<div class="grow" onclick="openDetail('${w.id}')" style="cursor:pointer"><strong>${esc(w.id)} — ${esc(w.title)}</strong><div class="small">${esc(w.type)} · ${esc(w.asset||"Facility")} · ${esc(w.location)}</div><div class="dueLine ${isOverdue(w)?"over":""}">Due: ${esc(w.due||"Unscheduled")} · Priority: ${esc(w.priority||"Normal")} · Assigned: ${esc(w.assigned||"Unassigned")}</div></div><span class="pill ${isOverdue(w)?"bad":isClosed(w)?"good":""}">${esc(w.status)}</span></div>`).join("")||'<div class="card"><strong>No work orders match these filters.</strong><div class="small" style="margin-top:5px">Try changing the search or filters.</div></div>';
+}
+function resetWOFilters(){
+ woTypeFilter="All";
+ if($("woSearch"))$("woSearch").value="";
+ if($("woStatus"))$("woStatus").value="All";
+ if($("woPriority"))$("woPriority").value="All";
+ if($("woScope"))$("woScope").value="All";
+ if($("woSort"))$("woSort").value="dueAsc";
+ if($("woPageTitle"))$("woPageTitle").textContent="Work Orders";
+ ["All","RM","PM","Project"].forEach(t=>{const b=$("woType"+t);if(b)b.classList.toggle("sel",t==="All")});
+}
+
+function render(){
+ const active=workOrders.filter(w=>!isClosed(w)),rm=workOrders.filter(w=>w.type==="Reactive Maintenance"),pm=workOrders.filter(w=>w.type==="Preventative Maintenance"||w.type==="Preventive Maintenance");
+ const rp=rm.length?Math.round(rm.filter(isClosed).length/rm.length*100):0,pp=pm.length?Math.round(pm.filter(isClosed).length/pm.length*100):0;
+ $("rmPct").textContent=rp+"%";$("pmPct").textContent=pp+"%";$("rmBar").style.width=rp+"%";$("pmBar").style.width=pp+"%";$("openCount").textContent=active.length;$("overdueCount").textContent=active.filter(isOverdue).length+" overdue";$("requestCount").textContent=requests.filter(r=>r.status!=="Resolved").length;
+ $("upcoming").innerHTML=active.slice(0,5).map(w=>`<div class="row" onclick="openDetail('${w.id}')"><div class="grow"><strong>${esc(w.title)}</strong><div class="small">${esc(w.id)} · ${esc(w.location)} · ${esc(w.due||"Unscheduled")}</div></div><span class="pill ${isOverdue(w)?"bad":""}">${esc(w.status)}</span></div>`).join("");
+ renderWorkOrders();
+ renderAssets();
+ $("requestList").innerHTML=requests.map(r=>`<div class="row" onclick="openRequest('${r.id}')" style="cursor:pointer"><div class="grow"><strong>${esc(r.issue)}</strong><div class="small">${esc(r.id)} · ${esc(r.location)} · ${esc(r.urgency)}</div></div><span class="pill ${r.status==="Resolved"?"good":""}">${esc(r.status)}</span></div>`).join("");
+ fillAssetSelectors();renderModules();
+}
+function showOpenWorkOrders(){selecting=false;selected.clear();go("workorders");$("woScope").value="Open";$("woPageTitle").textContent="Open Work Orders";renderWorkOrders()}
+function openRequest(id){const r=requests.find(x=>x.id===id);if(!r)return;const linked=r.workOrder?workOrders.find(w=>w.id===r.workOrder):null;$("requestDetailBody").innerHTML=`<button class="btn alt" onclick="go('requests')">← Maintenance Requests</button><div class="card" style="margin-top:10px"><div class="eyebrow">MAINTENANCE REQUEST</div><h2>${esc(r.id)}</h2><h3>${esc(r.issue)}</h3><span class="pill ${r.status==="Resolved"?"good":""}">${esc(r.status)}</span><div class="detail">Location <strong style="float:right">${esc(r.location)}</strong></div><div class="detail">Urgency <strong style="float:right">${esc(r.urgency)}</strong></div><div class="detail">Created <strong style="float:right">${esc((r.created||"").slice(0,10))}</strong></div>${linked?`<button class="btn full" style="margin-top:12px" onclick="openDetail('${linked.id}')">Open ${esc(linked.id)}</button>`:`<button class="btn full" style="margin-top:12px" onclick="convertRequest('${r.id}');openRequest('${r.id}')">Convert to Work Order</button>`}<button class="btn alt full" style="margin-top:8px" onclick="resolveRequest('${r.id}')">Mark Resolved</button></div>`;go("requestDetail")}
+function resolveRequest(id){const r=requests.find(x=>x.id===id);if(!r)return;r.status="Resolved";persist();openRequest(id);notify(id+" resolved")}
+function renderAssets(){const q=($("assetSearch")?.value||"").toLowerCase();if(!$("assetList"))return;$("assetList").innerHTML=assets.filter(a=>(a.id+" "+a.name+" "+a.category+" "+a.location).toLowerCase().includes(q)).map(a=>`<div class="row"><div class="grow" onclick="openAsset('${a.id}')"><strong>${esc(a.id)} — ${esc(a.name)}</strong><div class="small">${esc(a.category)} · ${esc(a.location)}</div></div><span class="pill ${a.status==="Operational"?"good":""}">${esc(a.status)}</span></div>`).join("")}
+function fillAssetSelectors(){const opts='<option value="">Facility / General</option>'+assets.map(a=>`<option value="${esc(a.id)}">${esc(a.id)} — ${esc(a.name)}</option>`).join("");$("fAsset").innerHTML=opts;$("scanAsset").innerHTML=assets.map(a=>`<option value="${esc(a.id)}">${esc(a.id)} — ${esc(a.name)}</option>`).join("")}
+function assetPicked(){const a=assets.find(x=>x.id===$("fAsset").value);if(a)$("fLocation").value=a.location||""}
+function openWO(type,asset=""){fillAssetSelectors();$("fType").value=type;$("fAsset").value=asset;$("fTitle").value="";$("fPriority").value="Normal";$("fAssigned").value="Shane Kelley";$("fScheduled").value="";$("fDue").value="";$("fDescription").value="";$("fLocation").value=asset?(assets.find(a=>a.id===asset)?.location||""):"";go("woCreate")}
+function nextWOId(type){const p=type.startsWith("Preventive")?"PM":type.startsWith("Upgrade")?"UP":type.startsWith("Inspection")?"IN":type.startsWith("Event")?"EV":"RM";const nums=workOrders.filter(w=>w.id.includes("-"+p+"-")).map(w=>parseInt(w.id.split("-").pop(),10)).filter(Number.isFinite);return "BCTP-"+p+"-"+(Math.max(p==="RM"?2500:1000,...nums)+1)}
+function createWO(){if(!$("fTitle").value.trim()||!$("fLocation").value.trim()){notify("Title and location are required");return}const id=nextWOId($("fType").value);workOrders.unshift({id,type:$("fType").value,title:$("fTitle").value.trim(),asset:$("fAsset").value,location:$("fLocation").value.trim(),priority:$("fPriority").value,assigned:$("fAssigned").value,status:"Requested",scheduled:$("fScheduled").value,due:$("fDue").value||"Unscheduled",description:$("fDescription").value,notes:[],labor:[],parts:[],created:new Date().toISOString()});persist();openDetail(id);notify(id+" created")}
+function openDetail(id){activeWO=id;const w=workOrders.find(x=>x.id===id);if(!w)return;$("woDetailBody").innerHTML=`<button class="btn alt" onclick="go('workorders')">← Work Orders</button><div class="card" style="margin-top:10px"><div class="eyebrow">${esc(w.type)}</div><h2>${esc(w.id)}</h2><h3>${esc(w.title)}</h3><span class="pill ${isOverdue(w)?"bad":""}">${esc(w.status)}</span><div class="detail">Asset <strong style="float:right">${esc(w.asset||"Facility / General")}</strong></div><div class="detail">Location <strong style="float:right">${esc(w.location)}</strong></div><div class="detail">Assigned <strong style="float:right">${esc(w.assigned)}</strong></div><div class="detail">Due <strong style="float:right">${esc(w.due)}</strong></div><p>${esc(w.description||"No description entered.")}</p><div class="actions"><button class="btn alt" onclick="duplicateWO()">⧉ Duplicate</button><button class="btn" onclick="changeStatus()">Change Status</button><button class="btn alt" onclick="addNote()">＋ Field Note</button><button class="btn dark" onclick="completeWO()">✓ Complete</button></div></div><div class="section">Updates</div>${(w.notes||[]).map(n=>`<div class="note">${esc(n)}</div>`).join("")||'<div class="small">No field notes yet.</div>'}`;go("woDetail")}
+function duplicateWO(){const w=workOrders.find(x=>x.id===activeWO);if(!w)return;const c=JSON.parse(JSON.stringify(w));c.id=nextWOId(w.type);c.title=w.title+" — Copy";c.status="Requested";c.notes=[];c.labor=[];c.parts=[];delete c.completed;delete c.closedAt;delete c.closedBy;c.created=new Date().toISOString();workOrders.unshift(c);persist();openDetail(c.id);notify("Duplicated as "+c.id)}
+function changeStatus(){const w=workOrders.find(x=>x.id===activeWO);$("modalBody").innerHTML=`<h2>Change Status</h2><div class="form"><select id="statusChoice">${["Requested","Approved / Triaged","Scheduled","In Progress","Waiting - Parts","Waiting - Vendor","Waiting - Access","Waiting - Event Conflict","Completed","Verified / Closed"].map(s=>`<option ${s===w.status?"selected":""}>${s}</option>`).join("")}</select><button class="btn full" style="margin-top:12px" onclick="saveStatus()">Save Status</button><button class="btn alt full" style="margin-top:8px" onclick="closeModal()">Cancel</button></div>`;openModal()}
+function saveStatus(){const w=workOrders.find(x=>x.id===activeWO);w.status=$("statusChoice").value;if(isClosed(w))w.completed=w.completed||new Date().toISOString();persist();closeModal();openDetail(w.id);notify("Status updated")}
+function addNote(){const w=workOrders.find(x=>x.id===activeWO);$("modalBody").innerHTML=`<h2>Add Field Note</h2><div class="form"><textarea id="noteText"></textarea><button class="btn full" onclick="saveNote()">Add Note</button><button class="btn alt full" style="margin-top:8px" onclick="closeModal()">Cancel</button></div>`;openModal()}
+function saveNote(){const w=workOrders.find(x=>x.id===activeWO),v=$("noteText").value.trim();if(!v)return;w.notes=w.notes||[];w.notes.push(v+" — Shane Kelley");persist();closeModal();openDetail(w.id)}
+function completeWO(){const w=workOrders.find(x=>x.id===activeWO);w.status="Completed";w.completed=new Date().toISOString();w.notes=w.notes||[];w.notes.push("Work completed by Shane Kelley.");persist();openDetail(w.id);notify("Work order completed")}
+function toggleSelect(){selecting=!selecting;selected.clear();$("selectBtn").textContent=selecting?"Cancel Selection":"Select Multiple";$("bulkBtn").style.display=selecting?"block":"none";render()}
+function selectWO(id,on){on?selected.add(id):selected.delete(id);$("bulkBtn").textContent="Close Selected ("+selected.size+")"}
+function bulkClose(){if(!selected.size){notify("Select at least one work order");return}$("modalBody").innerHTML=`<h2>Close ${selected.size} Work Orders</h2><div class="form"><label>Shared closeout note</label><textarea id="bulkNote"></textarea><button class="btn full" onclick="confirmBulkClose()">Close Selected Work Orders</button><button class="btn alt full" style="margin-top:8px" onclick="closeModal()">Cancel</button></div>`;openModal()}
+function confirmBulkClose(){const note=$("bulkNote").value.trim(),now=new Date().toISOString();workOrders.forEach(w=>{if(selected.has(w.id)){w.status="Verified / Closed";w.completed=w.completed||now;w.closedAt=now;w.closedBy="Shane Kelley";w.notes=w.notes||[];w.notes.push("Bulk closed by Shane Kelley"+(note?" — "+note:""))}});selecting=false;selected.clear();persist();closeModal();$("selectBtn").textContent="Select Multiple";$("bulkBtn").style.display="none";render();renderWorkOrders();notify("Selected work orders closed")}
+function openAssetCreate(){["aId","aName","aLocation","aManufacturer","aModel","aSerial","aVendor","aNotes"].forEach(id=>$(id).value="");go("assetCreate")}
+function saveAsset(){const id=$("aId").value.trim(),name=$("aName").value.trim();if(!id||!name){notify("Asset ID and name are required");return}if(assets.some(a=>a.id.toLowerCase()===id.toLowerCase())){notify("That Asset ID already exists");return}assets.unshift({id,name,category:$("aCategory").value,location:$("aLocation").value,manufacturer:$("aManufacturer").value,model:$("aModel").value,serial:$("aSerial").value,criticality:$("aCriticality").value,status:$("aStatus").value,vendor:$("aVendor").value,notes:$("aNotes").value,created:new Date().toISOString()});persist();go("assets");notify("Asset "+id+" added")}
+function openAsset(id){activeAsset=id;const a=assets.find(x=>x.id===id);const hist=workOrders.filter(w=>w.asset===id);$("assetDetailBody").innerHTML=`<button class="btn alt" onclick="go('assets')">← Assets</button><div class="card" style="margin-top:10px"><div class="eyebrow">${esc(a.category)}</div><h2>${esc(a.id)}</h2><h3>${esc(a.name)}</h3><span class="pill good">${esc(a.status)}</span><div class="detail">Location <strong style="float:right">${esc(a.location)}</strong></div><div class="detail">Manufacturer <strong style="float:right">${esc(a.manufacturer||"—")}</strong></div><div class="detail">Model <strong style="float:right">${esc(a.model||"—")}</strong></div><div class="detail">Serial <strong style="float:right">${esc(a.serial||"—")}</strong></div><div class="detail">Criticality <strong style="float:right">${esc(a.criticality)}</strong></div><button class="btn full" style="margin-top:12px" onclick="openWO('Reactive Maintenance','${esc(a.id)}')">＋ Create Work Order</button></div><div class="section">Service History</div>${hist.map(w=>`<div class="row" onclick="openDetail('${w.id}')"><div class="grow"><strong>${esc(w.id)}</strong><div>${esc(w.title)}</div></div><span class="pill">${esc(w.status)}</span></div>`).join("")||'<div class="small">No service history yet.</div>'}`;go("assetDetail")}
+function saveRequest(){const issue=$("rIssue").value.trim(),loc=$("rLocation").value.trim();if(!issue||!loc){notify("Issue and location are required");return}const id="REQ-"+(100+requests.length+1);requests.unshift({id,issue,location:loc,urgency:$("rUrgency").value,status:"New",created:new Date().toISOString()});persist();$("rIssue").value="";$("rLocation").value="";go("requests");notify(id+" submitted")}
+function convertRequest(id){const r=requests.find(x=>x.id===id);if(!r||r.status==="Converted")return;const wid=nextWOId("Reactive Maintenance");workOrders.unshift({id:wid,type:"Reactive Maintenance",title:r.issue,asset:"",location:r.location,priority:r.urgency==="Urgent"?"High":"Normal",assigned:"Unassigned",status:"Requested",due:"Unscheduled",description:"Converted from "+r.id,notes:[],labor:[],parts:[],created:new Date().toISOString()});r.status="Converted";r.workOrder=wid;persist();render();notify("Converted to "+wid)}
+function simulateScan(){const id=$("scanAsset").value;if(id)openAsset(id)}
+function renderModules(){
+ const modules={
+ pm:["Preventative Maintenance","Schedule, reschedule and track recurring maintenance.",`<button class="btn" onclick="openWO('Preventative Maintenance')">＋ Create PM</button><button class="btn alt" onclick="go('calendar')">View PM Calendar</button>`],
+ projects:["Upgrades / Projects","Track facility improvements, contractors, approvals and project costs.",`<button class="btn" onclick="openWO('Upgrade / Project')">＋ New Upgrade / Project</button>`],
+ venues:["Venues","Corporate → Region → Venue management.",`<div class="row"><div class="grow"><strong>Boeing Center at Tech Port</strong><div class="small">San Antonio, Texas · Active venue</div></div><span class="pill good">Current</span></div>`],
+ reports:["Reports","Corporate and venue performance reporting.",`<div class="grid"><div class="card"><div class="small">OPEN WO</div><div class="metric">${workOrders.filter(w=>!isClosed(w)).length}</div></div><div class="card"><div class="small">ASSETS</div><div class="metric">${assets.length}</div></div></div>`],
+ inventory:["Inventory","Parts, materials and stockroom management.",`<div class="row"><div class="grow"><strong>No inventory items entered</strong><div class="small">Parts used on work orders will be managed here.</div></div></div><button class="btn" onclick="notify('Add inventory item form is next-stage functionality')">＋ Add Item</button>`],
+ vendors:["Vendors","Contractors and service-provider management.",`<div class="row"><div class="grow"><strong>CoolAir Services</strong><div class="small">HVAC contractor</div></div></div><div class="row"><div class="grow"><strong>ABC Fire Systems</strong><div class="small">Kitchen / life-safety service</div></div></div><button class="btn" onclick="notify('Add vendor form is next-stage functionality')">＋ Add Vendor</button>`],
+ calendar:["Calendar","Scheduled maintenance, PMs, inspections and contractor visits.",workOrders.filter(w=>w.scheduled).map(w=>`<div class="row" onclick="openDetail('${w.id}')"><div class="grow"><strong>${esc(w.scheduled)} · ${esc(w.title)}</strong><div class="small">${esc(w.id)} · ${esc(w.assigned)}</div></div></div>`).join("")+`<button class="btn alt" onclick="notify('Microsoft Outlook sync is planned for the integration phase')">Connect Outlook</button>`],
+ users:["Users","Venue access and role management.",`<div class="row"><div class="grow"><strong>Shane Kelley</strong><div class="small">Venue Facilities Manager</div></div><span class="pill good">Active</span></div><button class="btn" onclick="notify('User invitation workflow is next-stage functionality')">＋ Add User</button>`],
+ settings:["Settings","Venue and application configuration.",`<div class="row"><div class="grow"><strong>Venue branding</strong><div class="small">Use the logo and header-photo controls at the top of the app.</div></div></div><div class="row"><div class="grow"><strong>Data storage</strong><div class="small">This prototype stores records in this browser using local storage.</div></div></div><button class="btn danger" onclick="resetDemo()">Reset Demo Data</button>`],
+ more:["More","K1 Management Systems modules.",`<div class="quick"><button class="btn alt" onclick="go('pm')">Preventative Maintenance</button><button class="btn alt" onclick="go('projects')">Upgrades / Projects</button><button class="btn alt" onclick="go('venues')">Venues</button><button class="btn alt" onclick="go('reports')">Reports</button><button class="btn alt" onclick="go('inventory')">Inventory</button><button class="btn alt" onclick="go('vendors')">Vendors</button><button class="btn alt" onclick="go('calendar')">Calendar</button><button class="btn alt" onclick="go('users')">Users</button><button class="btn alt" onclick="go('settings')">Settings</button></div>`]
+ };
+ Object.entries(modules).forEach(([id,m])=>{const el=$(id);if(el)el.innerHTML=`<div class="moduleHero"><div class="eyebrow">K1 MANAGEMENT SYSTEMS</div><h2>${m[0]}</h2><div>${m[1]}</div></div>${m[2]}`})
+}
+function resetDemo(){if(confirm("Reset this browser to the K1 demo data?")){localStorage.removeItem("k1_workorders");localStorage.removeItem("k1_assets");localStorage.removeItem("k1_requests");workOrders=JSON.parse(JSON.stringify(seedWO));assets=JSON.parse(JSON.stringify(seedAssets));requests=JSON.parse(JSON.stringify(seedRequests));persist();go("home");notify("Demo data reset")}}
+function openModal(){$("modal").style.display="flex"}function closeModal(){$("modal").style.display="none"}
+$("modal").addEventListener("click",e=>{if(e.target===$("modal"))closeModal()});
+function setupImageInput(inputId,key,targetId,isBackground){$(inputId).addEventListener("change",function(){const file=this.files&&this.files[0];if(!file)return;const reader=new FileReader();reader.onload=function(){const data=reader.result;localStorage.setItem(key,data);if(isBackground){const top=document.querySelector(".top");top.style.backgroundImage='url("'+data+'")';top.classList.add("hasPhoto")}else{$(targetId).innerHTML='<img alt="Venue logo" src="'+data+'">'}};reader.readAsDataURL(file)})}
+setupImageInput("logoUpload","k1_venue_logo","venueLogo",false);setupImageInput("headerUpload","k1_header_bg","",true);
+const savedLogo=localStorage.getItem("k1_venue_logo");if(savedLogo)$("venueLogo").innerHTML='<img alt="Venue logo" src="'+savedLogo+'">';
+const savedBg=localStorage.getItem("k1_header_bg");if(savedBg){document.querySelector(".top").style.backgroundImage='url("'+savedBg+'")';document.querySelector(".top").classList.add("hasPhoto")}
+persist();render();
 </script></body></html><div class="grid"><div class="card"><div class="small">RM COMPLETION</div><div id="rmPct" class="metric">0%</div><div class="bar"><i id="rmBar"></i></div></div><div class="card"><div class="small">PM COMPLIANCE</div><div id="pmPct" class="metric">0%</div><div class="bar"><i id="pmBar"></i></div></div><div class="card" role="button" tabindex="0" onclick="showOpenWorkOrders()" style="cursor:pointer"><div class="small">OPEN WORK ORDERS</div><div id="openCount" class="metric">0</div><div id="overdueCount" class="small"></div><div class="small" style="margin-top:7px;color:#0967d8;font-weight:750">View all open work orders →</div></div><div class="card" role="button" tabindex="0" onclick="go('requests')" style="cursor:pointer"><div class="small">MAINT. REQUESTS</div><div id="requestCount" class="metric">0</div><div class="small">Active requests</div><div class="small" style="margin-top:7px;color:#0967d8;font-weight:750">View all maintenance requests →</div></div></div>
 <div class="section">Upcoming Work <button class="btn alt" onclick="go('calendar')">View All</button></div><div id="upcoming"></div>
 <div class="section">Quick Actions</div><div class="quick"><button class="btn" onclick="openWO('Reactive Maintenance')">🛠 + Reactive Work Order</button><button class="btn" onclick="openWO('Preventative Maintenance')">▦ + Preventative Work Order</button><button class="btn" onclick="openWO('Upgrade / Project')">▥ + Upgrade / Project</button><button class="btn dark" onclick="go('scan')">▦ + Scan Asset QR Code</button><button class="btn alt" onclick="go('requestCreate')">☵ + Maintenance Request</button><button class="btn alt" onclick="go('calendar')">▦ View Calendar</button></div></section>
