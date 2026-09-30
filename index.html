@@ -36,7 +36,7 @@ button,input,select,textarea{font:inherit}.app{max-width:520px;margin:auto;min-h
 <div class="uploads"><label>Venue logo<input id="logoUpload" type="file" accept="image/*"></label><label>Header photo<input id="headerUpload" type="file" accept="image/*"></label></div></header>
 <main class="content">
 <section id="home" class="screen active"><div class="hero"><div class="eyebrow">VENUE FACILITIES</div><h1>Good morning, Shane</h1><div>Facilities Management Dashboard</div></div>
-<div class="grid"><div class="card"><div class="small">RM COMPLETION</div><div id="rmPct" class="metric">0%</div><div class="bar"><i id="rmBar"></i></div></div><div class="card"><div class="small">PM COMPLIANCE</div><div id="pmPct" class="metric">0%</div><div class="bar"><i id="pmBar"></i></div></div><div class="card" role="button" tabindex="0" onclick="showOpenWorkOrders()" style="cursor:pointer"><div class="small">OPEN WORK ORDERS</div><div id="openCount" class="metric">0</div><div id="overdueCount" class="small"></div><div class="small" style="margin-top:7px;color:#0967d8;font-weight:750">View all open work orders →</div></div><div class="card" role="button" tabindex="0" onclick="showAllRequests()" style="cursor:pointer"><div class="small">MAINT. REQUESTS</div><div id="requestCount" class="metric">0</div><div class="small">Active requests</div><div class="small" style="margin-top:7px;color:#0967d8;font-weight:750">View all maintenance requests →</div></div></div>
+<div class="grid"><div class="card"><div class="small">RM COMPLETION</div><div id="rmPct" class="metric">0%</div><div class="bar"><i id="rmBar"></i></div></div><div class="card"><div class="small">PM COMPLIANCE</div><div id="pmPct" class="metric">0%</div><div class="bar"><i id="pmBar"></i></div></div><button type="button" class="card dashboardLink" onclick="showOpenWorkOrders()"><div class="small">OPEN WORK ORDERS</div><div id="openCount" class="metric">0</div><div id="overdueCount" class="small"></div><div class="small dashboardLinkText">View all open work orders →</div></button><button type="button" class="card dashboardLink" onclick="showAllRequests()"><div class="small">MAINT. REQUESTS</div><div id="requestCount" class="metric">0</div><div class="small">Active requests</div><div class="small dashboardLinkText">View all maintenance requests →</div></button></div>
 <div class="section">Upcoming Work <button class="btn alt" onclick="go('calendar')">View All</button></div><div id="upcoming"></div>
 <div class="section">Quick Actions</div><div class="quick"><button class="btn" onclick="openWO('Reactive Maintenance')">🛠 + Reactive Work Order</button><button class="btn" onclick="openWO('Preventative Maintenance')">▦ + Preventative Work Order</button><button class="btn" onclick="openWO('Upgrade / Project')">▥ + Upgrade / Project</button><button class="btn dark" onclick="go('scan')">▦ + Scan Asset QR Code</button><button class="btn alt" onclick="go('requestCreate')">☵ + Maintenance Request</button><button class="btn alt" onclick="go('calendar')">▦ View Calendar</button></div></section>
 
@@ -125,13 +125,18 @@ function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&l
 function $(id){return document.getElementById(id)}
 function notify(msg){const t=$("toast");t.textContent=msg;t.style.display="block";setTimeout(()=>t.style.display="none",2200)}
 function go(id){
- if(id==="pm"){renderPMScreen();}
- else{render();}
- document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
- const target=$(id);if(target)target.classList.add("active");
+ const target=$(id);
+ if(!target){notify("Page unavailable: "+id);return;}
+ if(id==="home")render();
+ if(id==="pm")renderPMScreen();
  if(id==="requests")renderRequests();
  if(id==="workorders")renderWorkOrders();
+ if(id==="assets")renderAssets();
+ if(id==="assetGroups")renderAssetGroups();
+ if(["projects","venues","reports","inventory","vendors","calendar","users","settings","more"].includes(id)){renderModules();}
  if(id==="calendar")renderCalendar();
+ document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
+ target.classList.add("active");
  window.scrollTo(0,0);
 }
 function isClosed(w){return w.status==="Completed"||w.status==="Verified / Closed"}
