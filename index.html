@@ -156,6 +156,14 @@ function problemField(id,current='',label='Problem'){
 function toggleProblemCustom(id){const x=$(id+'Custom');if(x)x.style.display=$(id).value==='Custom'?'block':'none'}
 function readProblem(id){return $(id).value==='Custom'?($(id+'Custom').value.trim()||''):$(id).value}
 function validateProblem(id){if($(id)?.value==='Custom'&&!readProblem(id)){notify('Enter a custom problem description.');$(id+'Custom').focus();return false}return true}
+function choiceField(id,label,options,current='',fallback=''){
+ const value=current||fallback||options[0]||'';
+ const custom=!!value&&!options.includes(value);
+ return `<div class="choiceField"><label for="${id}">${label}</label><select id="${id}" onchange="toggleChoiceCustom('${id}')">${options.map(v=>`<option value="${esc(v)}" ${((custom&&v==='Custom')||(!custom&&v===value))?'selected':''}>${esc(v)}</option>`).join('')}</select><input id="${id}Custom" aria-label="Custom ${esc(label)}" placeholder="Enter custom ${esc(label.toLowerCase())}" value="${custom?esc(value):''}" style="display:${custom?'block':'none'};margin-top:7px" /></div>`;
+}
+function toggleChoiceCustom(id){const x=$(id+'Custom');if(x&&$(id))x.style.display=$(id).value==='Custom'?'block':'none'}
+function readChoice(id){const el=$(id);if(!el)return '';return el.value==='Custom'?(($(id+'Custom')?.value||'').trim()):el.value}
+function validateChoice(id,label='Selection'){const el=$(id);if(!el)return true;if(el.value==='Custom'&&!readChoice(id)){notify('Enter a custom '+label.toLowerCase()+'.');$(id+'Custom')?.focus();return false}return true}
 
 const seedPMSchedules=[{id:"PM-1001",title:"AHU Filter Change",sourceType:"Asset Group",groupId:"GRP-AHU",pmType:"Time-Based",expectedDays:1,expectedHours:0,timezone:"Central Time (US & Canada)",createTime:"08:00",laborHours:4,estCost:350,woStatus:"Assigned",priority:"Normal",category:"HVAC",workType:"Preventative Maintenance",costCenter:"Facilities",assignee:"Shane Kelley",problem:"Routine filter replacement",cause:"Scheduled lifecycle maintenance",description:"Replace filters, inspect belts and record condition.",enabled:true,autoGenerate:true,separateWO:false,frequency:"Monthly",interval:3,intervalUnit:"month(s)",start:"2026-09-29",startTime:"08:00",endRule:"No end date",endValue:"",blockPrior:true}];
 const seedAssetGroups=[
