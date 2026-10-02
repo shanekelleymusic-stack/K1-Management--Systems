@@ -69,6 +69,53 @@ button,input,select,textarea{font:inherit}.app{max-width:520px;margin:auto;min-h
  .desktopMenu{width:250px!important}
 }
 
+/* V21 authoritative mobile navigation */
+#navToggle,#mobileDrawerTab{display:none}
+@media(max-width:899px){
+ #navToggle{position:fixed;opacity:0;pointer-events:none}
+ #mobileDrawerTab{display:flex!important;position:fixed!important;left:0!important;top:77%!important;width:36px!important;height:64px!important;border:0!important;border-radius:0 10px 10px 0!important;background:#101b26!important;color:#fff!important;z-index:205!important;align-items:center!important;justify-content:center!important;font-size:21px!important;box-shadow:0 2px 8px #0004!important}
+ .desktopMenu{display:block!important;position:fixed!important;top:0!important;bottom:0!important;left:0!important;width:min(82vw,300px)!important;margin:0!important;background:#101b26!important;color:#fff!important;padding:20px 10px!important;z-index:220!important;transform:translateX(-105%)!important;transition:transform .22s ease!important;overflow:auto!important;visibility:visible!important}
+ #navToggle:checked ~ .desktopMenu{transform:translateX(0)!important}
+ #navToggle:checked ~ #mobileDrawerTab{display:none!important}
+ #navToggle:checked ~ .drawerBackdrop{display:block!important;position:fixed!important;inset:0!important;background:#0007!important;z-index:210!important}
+ .nav{display:grid!important;position:fixed!important;left:0!important;right:0!important;bottom:0!important;transform:none!important;width:100%!important;max-width:none!important;height:calc(72px + env(safe-area-inset-bottom))!important;padding-bottom:env(safe-area-inset-bottom)!important;z-index:200!important}
+ .app{padding-bottom:calc(88px + env(safe-area-inset-bottom))!important}
+}
+.assetHeroImage img{width:100%;height:100%;object-fit:cover}
+.assetMediaGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.assetMediaCard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px;min-width:0}
+.assetThumb{height:100px;border-radius:9px;background:#f3f6f9;border:1px dashed #c6d1dc;display:grid;place-items:center;overflow:hidden;margin-bottom:8px;color:#657487;font-size:11px;text-align:center}
+.assetThumb img{width:100%;height:100%;object-fit:cover}
+.assetMediaCard input{width:100%;font-size:11px}
+.assetTabs{display:flex;gap:4px;overflow:auto;border-top:1px solid var(--line);padding:0 10px}.assetTabs button{flex:1;min-width:78px;border:0;background:#fff;padding:13px 8px;font-weight:750;color:#526170}.assetTabs button.sel{color:var(--blue);border-bottom:3px solid var(--blue)}
+.docDrop{border:2px dashed #b8c5d2;border-radius:12px;padding:22px;text-align:center;background:#f8fafc;color:#657487;margin:10px 0}.docDrop.dragover{border-color:var(--blue);background:#eef5fd;color:#0759b5}
+.docRow{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;margin:7px 0}.docIcon{font-size:24px}.docRow .grow{min-width:0}.docName{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:750}
+@media(max-width:420px){.assetHeroTop{grid-template-columns:minmax(0,1fr) 112px}.assetHeroImage{height:100px}.assetMediaGrid{grid-template-columns:1fr}.assetTabs button{font-size:12px}}
+
+.desktopMenu{display:none}
+@media(min-width:900px){body{background:#e8edf2}.app{max-width:1180px;padding-left:190px;position:relative}.desktopMenu{display:block;position:fixed;top:0;bottom:0;width:190px;margin-left:-190px;background:#101b26;color:#fff;padding:20px 10px;z-index:30}.desktopMenu .dmBrand{font-size:24px;font-weight:900;padding:5px 10px 18px}.desktopMenu button{display:block;width:100%;text-align:left;border:0;background:transparent;color:#fff;padding:10px;border-radius:7px}.desktopMenu button:hover{background:#0967d8}.top{min-height:180px}.content{padding:16px}.grid{grid-template-columns:repeat(4,1fr)}.nav{display:none}}
+.pmSection{background:#fff;border:1px solid var(--line);border-radius:14px;margin:10px 0;padding:14px}.pmSection h3{margin:0 0 10px}.pmGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.pmGrid .wide{grid-column:1/-1}.checkrow,.radioRow{display:flex;gap:14px;flex-wrap:wrap;margin:8px 0}.checkrow label,.radioRow label{display:flex;align-items:center;gap:6px;font-size:12px}.checkrow input,.radioRow input{width:auto}.dragCal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.dragDay{min-height:125px;background:#fff;border:1px solid var(--line);border-radius:9px;padding:5px}.dragDay.dragover{outline:2px dashed var(--blue);background:#f3f8ff}.dragItem{font-size:9px;line-height:1.2;background:#e9f3ff;color:#0759b5;border-radius:5px;padding:5px;margin:3px 0;cursor:grab}.dragItem.contractor{background:#fff2df;color:#8a4d00}.dragItem.event{background:#f2eafe;color:#6938a8;cursor:default}.pmScheduleCard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;margin:8px 0}@media(max-width:650px){.pmGrid{grid-template-columns:1fr}.dragDay{min-height:95px}.dragItem{font-size:8px}}
+#mobileDrawerTab{display:none}
+@media(max-width:899px){
+ #mobileDrawerTab{display:flex;position:fixed;left:0;top:44%;width:34px;height:64px;border:0;border-radius:0 10px 10px 0;background:#101b26;color:#fff;z-index:27;align-items:center;justify-content:center;font-size:20px;box-shadow:0 2px 8px #0004;touch-action:pan-y}
+ body.drawerOpen #mobileDrawerTab{display:none}
+ .desktopMenu{will-change:transform}
+}
+
+/* V19 mobile navigation reliability */
+@media(max-width:899px){
+ .desktopMenu{display:block!important;position:fixed!important;top:0!important;bottom:0!important;left:0!important;width:min(82vw,300px)!important;margin:0!important;z-index:120!important;transform:translateX(-105%)!important;visibility:visible!important}
+ .desktopMenu.open{transform:translateX(0)!important}
+ .drawerBackdrop{z-index:110!important}
+ #mobileDrawerTab{display:flex!important;top:68%!important;z-index:105!important}
+ body.drawerOpen #mobileDrawerTab{display:none!important}
+ .nav{display:grid!important;position:fixed!important;left:0!important;right:0!important;bottom:0!important;transform:none!important;width:100%!important;max-width:none!important;height:calc(72px + env(safe-area-inset-bottom))!important;padding-bottom:env(safe-area-inset-bottom)!important;z-index:100!important}
+ .app{padding-bottom:calc(88px + env(safe-area-inset-bottom))!important}
+}
+@media(min-width:700px) and (max-width:899px) and (orientation:landscape){
+ .desktopMenu{width:250px!important}
+}
+
 /* V20 authoritative navigation rules */
 #navToggle,#mobileDrawerTab{display:none}
 @media(max-width:899px){
