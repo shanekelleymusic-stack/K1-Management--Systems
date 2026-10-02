@@ -148,6 +148,9 @@ const seedAssets=[
 {id:"RTS-01",name:"Retractable Seating",category:"Retractable Seating",location:"Arena Bowl",manufacturer:"",model:"",serial:"",criticality:"High",status:"Operational",vendor:"",notes:""}
 ];
 
+const K1_CAUSE_OPTIONS=["Bad Compressor","Building Movement","Burned Out Bulb","Environmental Factors","Failure","Improper Handling","Inspection","Maintenance Not Done","Malfunction","Misuse","N/A","Power Interruption","Power Surge","Preventative Maintenance","Scheduled Maintenance","TBD","Treatment","Undetermined","Unknown","User Defined","User Error","Vandalism","Water Leak","Wear and Tear","Custom"];
+const K1_WORK_CATEGORY_OPTIONS=["Adjust","Breakdown","Carpentry","Clean Up","Communication","Contract Renewal","Electrical","Event Set Up","Field/Roof","HVAC","Improvement","Inspection","Installation","IT","Kitchen Equipment","Landscaping","Lighting","Masonry","Mechanical","Overhaul","Paint","Permit Renewal","Pest Control","Planned","Plumbing","Preventative Maintenance","Remove","Repair","Safety","TBD","Undefined","Custom"];
+const K1_WORK_TYPE_OPTIONS=["Events","Improvements","Inspections","Kitchen Equipment","Natural Disaster Damage","Preventative Maintenance","Reactive Maintenance","User Education","Vandalism","Custom"];
 const K1_PROBLEM_OPTIONS=["ADJS (Adjustment)", "Air Leak", "Alarm", "Broken", "Burn Out", "Calibration", "Circuit Breaker Trip", "Clog", "Cracked", "Custodial", "Dirty", "Electrical", "Heating Ventilation/Air Conditioning", "Inspection", "Installation", "Jammed", "Lubrication", "Mildew", "N/A", "New In Service", "No Power", "Noise", "Not Starting", "Operator Error", "Overheating", "Paint Work", "Planed", "Preventative Maintenance", "Reading Error", "Repair", "Scheduled Maintenance", "Sensor", "TBD", "Trip Failure", "Unknown", "User Defined", "Water Leak", "Wiring", "Custom"];
 function problemField(id,current='',label='Problem'){
  const custom=!!current&&!K1_PROBLEM_OPTIONS.includes(current);
