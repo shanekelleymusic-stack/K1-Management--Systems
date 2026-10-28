@@ -609,14 +609,14 @@ function k1FleetExport(){const rows=[['Vehicle ID','Name','Plate/VIN','Driver','
 function k1RenderFleet(){
  const h=$('k1FleetWorkspace');if(!h)return;
  h.innerHTML=`<div class="maptools"><button class="btn alt" onclick="navHome()">← Home</button><button class="btn" onclick="k1FleetAdd()">+ Add Vehicle</button><button class="btn alt" onclick="k1SeedDemo(true)">Restore Demo Trucks</button><button class="btn alt" onclick="k1FleetExport()">Export Fleet CSV</button><button class="btn alt" onclick="k1FleetDownloadBackup()">Backup Data</button><button class="btn alt" onclick="go('rfid')">RFID Tracking</button></div>
- <div class="card"><h3>Fleet Geofence — Interactive Street Map</h3><p class="small">Proof of concept using OpenStreetMap. No Google Maps account or paid API key. Vehicle movements, speeds and notifications are simulated; a network connection is needed for map tiles.</p>
+ <div class="card"><h3>Shared Asset Locations / Fleet Home Bases</h3><p class="small">Home Base is an assigned Asset Location. Current / last-known position is separate and does not change when a vehicle moves.</p><div class="maptools"><button class="btn" onclick="k1LocationAdd()">+ Add Location</button><button class="btn alt" onclick="k1LocationRename()">Rename Location</button><button class="btn alt" onclick="k1LocationDelete()">Remove Location</button><button class="btn alt" onclick="k1LocationSetPoint()">Set Location on Map</button><button class="btn alt" onclick="k1LocationReturnVehicle()">Return Truck to Home Base</button></div><label>Managed Location <select id="k1LocationSelect" onchange="k1LocationFocus()">${k1AllLocations().map(z=>`<option value="${esc(z.id)}">${esc(z.name)}</option>`).join('')}</select></label><p class="small">Choose a location, then click Set Location on Map and click its actual parking/garage position. No guessed coordinates are assigned to new locations.</p><div id="k1LocationList">${k1AllLocations().map(z=>`<div class="small">${esc(z.name)} · ${z.lat==null?'Map position not set':'Map position saved'} · ${k1Fleet.filter(v=>v.homeBaseId===z.id).length} fleet vehicle(s)</div>`).join('')}</div></div><div class="card"><h3>Fleet Geofence — Interactive Street Map</h3><p class="small">Proof of concept using OpenStreetMap. No Google Maps account or paid API key. Vehicle movements, speeds and notifications are simulated; a network connection is needed for map tiles.</p>
  <div class="maptools"><label>Geofence <select id="k1LFenceTarget" onchange="k1LRenderLayers()"><option value="shared">Entire Fleet (shared)</option>${k1Fleet.map(v=>`<option value="${esc(v.id)}">${esc(v.name)} (individual)</option>`).join('')}</select></label><button class="btn" onclick="k1LStartDraw()">Draw New Fence</button><button class="btn alt" onclick="k1LFinishDraw()">Finish Fence</button><button class="btn alt" onclick="k1LEditFence()">Adjust Corners</button><button class="btn alt" onclick="k1LApplyFleet()">Apply to Entire Fleet</button><button class="btn alt" onclick="k1LClearVehicleFence()">Use Shared Fence</button></div>
  <div class="maptools"><label>Move vehicle <select id="k1LVehicle"><option value="">Select vehicle</option>${k1Fleet.map(v=>`<option value="${esc(v.id)}">${esc(v.name)}</option>`).join('')}</select></label><label>Simulated speed (mph) <input id="k1LSpeed" type="number" min="0" max="120" value="28" style="width:85px"></label><button class="btn alt" onclick="k1LMoveMode()">Simulate Vehicle Movement</button><button class="btn alt" onclick="k1LDemoTrip()">Run Exit & Return Demo</button></div>
  <p id="k1LHint" class="small">Choose Draw New Fence and click the map to place vertices; finish when done. Or choose a vehicle, click Simulate Vehicle Movement, and click map destinations.</p>
  <div id="k1LeafletMap" style="height:460px;min-height:320px;width:100%;border:1px solid #cbd5e1;border-radius:10px"></div>
  <p class="small">Blue = selected fence · Green = inside · Orange = outside. Map © OpenStreetMap contributors. Demo markers do not represent real GPS.</p></div>
  <div class="card"><h3>Fleet Operations</h3><p>${k1Fleet.length} vehicles · ${k1FleetAlerts.filter(a=>!a.ack).length} unacknowledged alerts</p><input placeholder="Search fleet..." oninput="k1FleetFilter(this.value)"></div>
- <div class="card"><h3>Vehicle Registry</h3>${k1Fleet.map(v=>`<div class="row k1fleetvehicle" data-search="${esc([v.name,v.plate,v.driver,v.location,v.id].join(' ').toLowerCase())}"><div class="grow"><strong>${esc(v.name)}</strong> · ${esc(v.plate||'No plate')}<div class="small">Driver: ${esc(v.driver||'Unassigned')} · Speed: ${esc(v.speed||'—')} mph · ${esc(v.geofence||'Not evaluated')}</div><button class="btn alt" onclick="k1FleetProfile('${v.id}')">Vehicle Profile</button> <button class="btn alt" onclick="k1FleetEdit('${v.id}')">Edit</button> <button class="btn alt" onclick="k1FleetWO('${v.id}','Reactive Maintenance')">Repair WO</button> <button class="btn alt" onclick="k1FleetWO('${v.id}','Preventative Maintenance')">PM WO</button></div></div>`).join('')||'No vehicles yet.'}</div>
+ <div class="card"><h3>Vehicle Registry</h3>${k1Fleet.map(v=>`<div class="row k1fleetvehicle" data-search="${esc([v.name,v.plate,v.driver,v.location,v.id].join(' ').toLowerCase())}"><div class="grow"><strong>${esc(v.name)}</strong> · ${esc(v.plate||'No plate')}<div class="small">Home Base: ${esc(k1LocationName(v.homeBaseId)||"Not assigned")} · Current: ${esc(v.location||"Unknown")} · Driver: ${esc(v.driver||'Unassigned')} · Speed: ${esc(v.speed||'—')} mph · ${esc(v.geofence||'Not evaluated')}</div><button class="btn alt" onclick="k1FleetProfile('${v.id}')">Vehicle Profile</button> <button class="btn alt" onclick="k1FleetEdit('${v.id}')">Edit</button> <button class="btn alt" onclick="k1FleetWO('${v.id}','Reactive Maintenance')">Repair WO</button> <button class="btn alt" onclick="k1FleetWO('${v.id}','Preventative Maintenance')">PM WO</button></div></div>`).join('')||'No vehicles yet.'}</div>
  <div class="card"><h3>Geofence Events & Manager Notification Log</h3><p class="small">Alerts are logged locally. SMS action opens a draft; no text is sent automatically.</p>${k1FleetAlerts.map(a=>`<div class="row"><div class="grow"><strong>${esc(a.name||'Vehicle')}</strong> · ${esc(a.message||'Geofence event')}<div class="small">Driver: ${esc(a.driver||'Unassigned')} · Exit: ${esc(a.exitAt||a.at||'—')} · Return: ${esc(a.returnAt||'Awaiting return')} · Speed: ${esc(a.speed||'—')} mph</div><button class="btn alt" onclick="k1LAlertRoute('${esc(a.id)}')">Show Route</button> <button class="btn alt" onclick="k1FleetAlertDetails('${esc(a.id)}')">SMS Draft / Details</button></div>${a.ack?'<span class="pill">Acknowledged</span>':`<button class="btn alt" onclick="k1FleetAck('${esc(a.id)}')">Acknowledge</button>`}</div>`).join('')||'No alerts recorded yet.'}</div>`;
  k1LLoadMap();
 }
@@ -627,13 +627,13 @@ function k1FleetFilter(q){document.querySelectorAll('.k1fleetvehicle').forEach(e
 function k1FleetProfile(id){
  const v=k1Fleet.find(x=>x.id===id);if(!v)return;
  const fields=[['name','Unit / vehicle name'],['year','Model year'],['make','Make'],['model','Model'],['trim','Trim'],['vin','VIN'],['plate','License plate'],['driver','Assigned driver'],['department','Department'],['status','Vehicle status'],['location','Current / last-known location'],['odometer','Odometer (miles)'],['fuel','Fuel level (%)'],['speed','Speed (mph; manual)'],['fuelType','Fuel type'],['fuelCapacity','Fuel capacity (gallons)'],['registrationExpiry','Registration expiration (YYYY-MM-DD)'],['insuranceExpiry','Insurance expiration (YYYY-MM-DD)'],['inspectionDue','Inspection due (YYYY-MM-DD)'],['lastService','Last service date (YYYY-MM-DD)'],['nextService','Next PM due (YYYY-MM-DD)'],['pmMileage','Next PM odometer'],['purchaseDate','Purchase date (YYYY-MM-DD)'],['purchaseCost','Purchase cost ($)'],['replacementValue','Replacement value ($)'],['annualMaintenanceCost','YTD maintenance cost ($)'],['vendor','Preferred service vendor'],['policy','Insurance policy reference'],['gpsDevice','GPS / telematics device ID'],['notes','Vehicle notes']];
- const body=fields.map(([k,label])=>`<label style="display:block;margin-top:9px">${label}<input data-fleet-field="${k}" value="${esc(String(v[k]??''))}" style="width:100%"></label>`).join('');
+ const homeBaseSelect=`<label style="display:block;margin-top:9px">Assigned Home Base (shared Asset Location)<select id="k1ProfileHomeBase" style="width:100%"><option value="">Unassigned</option>${k1AllLocations().map(z=>`<option value="${esc(z.id)}" ${v.homeBaseId===z.id?'selected':''}>${esc(z.name)}</option>`).join('')}</select></label>`;const body=homeBaseSelect+fields.map(([k,label])=>`<label style="display:block;margin-top:9px">${label}<input data-fleet-field="${k}" value="${esc(String(v[k]??''))}" style="width:100%"></label>`).join('');
  const host=$('k1FleetWorkspace');if(!host)return;
  host.innerHTML=`<div class="maptools"><button class="btn alt" onclick="k1RenderFleet()">← Fleet Overview</button><button class="btn" onclick="k1FleetProfileSave('${esc(id)}')">Save Vehicle Profile</button><button class="btn alt" onclick="k1FleetWO('${esc(id)}','Reactive Maintenance')">Create Repair WO</button><button class="btn alt" onclick="k1FleetWO('${esc(id)}','Preventative Maintenance')">Create PM WO</button></div><div class="card"><h3>${esc(v.name)} — Vehicle Profile</h3><p class="small">All fields editable. Last-known position and telemetry are manual until hardware integration.</p><div class="k1fleetfields">${body}</div></div><div class="card"><h3>Movement / Tracking History</h3>${(v.history||[]).slice().reverse().map(x=>`<div class="row">${esc(x.at||'')} · ${esc(x.location||'Map location')} · ${esc(x.source||'Manual')}</div>`).join('')||'No movement records yet'}</div>`;
 }
 function k1FleetProfileSave(id){
  const v=k1Fleet.find(x=>x.id===id);if(!v)return;
- document.querySelectorAll('[data-fleet-field]').forEach(el=>{v[el.dataset.fleetField]=el.value.trim()});
+ document.querySelectorAll('[data-fleet-field]').forEach(el=>{v[el.dataset.fleetField]=el.value.trim()});v.homeBaseId=$('k1ProfileHomeBase')?.value||'';k1SyncVehicleAsset(v);
  v.lastEdited=new Date().toISOString();k1FleetSave();k1RenderFleet();notify('Vehicle profile saved');
 }
 function k1RFIDMonitor(){const h=$('k1RFIDMonitor');if(!h)return;h.innerHTML=`<div class="card"><h3>RFID Tracking</h3><p>Open the dedicated RFID dashboard to manage tags, record scans and review stale records.</p><button class="btn" onclick="go('rfid')">Open RFID Dashboard</button></div>`}
@@ -735,7 +735,7 @@ function k1LLoadMap(){
  const host=$('k1LeafletMap');if(!host)return;
  k1LMap=L.map(host,{doubleClickZoom:false}).setView(k1LCenter,16);
  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(k1LMap);
- k1LMap.on('click',e=>{if(k1LMode==='draw'){k1LPoints.push([e.latlng.lat,e.latlng.lng]);k1LDrawPreview();return}if(k1LMode==='move'){const id=$('k1LVehicle')?.value;if(!id){notify('Select a vehicle first');return}k1LMoveVehicle(id,e.latlng.lat,e.latlng.lng)}});
+ k1LMap.on('click',e=>{if(k1LMode==='homebase'){const z=k1AllLocations().find(z=>z.id===k1LHomeBaseTarget);if(z){k1LocationPositions[z.id]={lat:e.latlng.lat,lng:e.latlng.lng};k1LocationSave();k1LMode='view';k1LRenderLayers();notify('Location map position saved: '+z.name)}return}if(k1LMode==='draw'){k1LPoints.push([e.latlng.lat,e.latlng.lng]);k1LDrawPreview();return}if(k1LMode==='move'){const id=$('k1LVehicle')?.value;if(!id){notify('Select a vehicle first');return}k1LMoveVehicle(id,e.latlng.lat,e.latlng.lng)}});
  k1LRenderLayers();setTimeout(()=>k1LMap?.invalidateSize(),120);
 }
 function k1LFenceFor(id){return k1LFences.vehicles[id]?.length?k1LFences.vehicles[id]:k1LFences.shared}
@@ -749,6 +749,7 @@ function k1LRenderLayers(){
  const pts=k1LActivePoints();
  if(pts?.length>=3){k1LPolygon=L.polygon(pts,{color:'#1769d2',weight:3,fillOpacity:.12}).addTo(k1LMap)}
  for(const v of k1Fleet){const lat=Number(v.demoLat)||k1LCenter[0]+(Number(v.y??50)-50)*-.000045,lon=Number(v.demoLon)||k1LCenter[1]+(Number(v.x??50)-50)*.000065;const inside=k1LInside(lat,lon,k1LFenceFor(v.id));const marker=L.circleMarker([lat,lon],{radius:9,color:'#fff',weight:2,fillColor:inside===false?'#df6a36':'#168a66',fillOpacity:1}).addTo(k1LMap).bindTooltip(v.name+' · '+(inside===false?'Outside':'Inside / unconfigured'));marker.on('click',()=>{$('k1LVehicle').value=v.id;notify('Selected '+v.name)});k1LMarkers.push(marker)}
+ for(const z of k1AllLocations()){const p=k1LocationPositions[z.id];if(p&&Number.isFinite(p.lat)&&Number.isFinite(p.lng)){const m=L.circleMarker([p.lat,p.lng],{radius:5,color:'#2465bd',fillColor:'#fff',fillOpacity:1}).addTo(k1LMap).bindTooltip('Home Base: '+z.name);k1LMarkers.push(m)}}
 }
 function k1LStartDraw(){if(!k1LMap){notify('Map still loading');return}k1LMode='draw';k1LPoints=[];$('k1LHint').textContent='Click at least three corners on the map, then click Finish Fence.'}
 function k1LDrawPreview(){if(k1LPolygon)k1LMap.removeLayer(k1LPolygon);if(k1LPoints.length>1)k1LPolygon=L.polyline(k1LPoints,{color:'#1769d2',dashArray:'5,5'}).addTo(k1LMap)}
@@ -780,5 +781,70 @@ function k1LDemoTrip(){
  notify('Exit, travel outside, and return events recorded for '+id)
 }
 function k1LAlertRoute(id){const a=k1FleetAlerts.find(x=>x.id===id);if(!a)return;if(!k1LMap){notify('Open fleet map first');return}if(k1LRoute)k1LMap.removeLayer(k1LRoute);if(a.route?.length){k1LRoute=L.polyline(a.route,{color:'#e85c2a',weight:5}).addTo(k1LMap);k1LMap.fitBounds(k1LRoute.getBounds().pad(.3))}else notify('No mapped route available for this older event')}
+
+
+// V20: asset locations are the single source of truth for fleet home-base assignments.
+// Existing indoor map zones are included, with outdoor garages/lots as additional shared locations.
+let k1ExtraLocations=JSON.parse(localStorage.getItem('k1_extra_locations_v20')||'[]');
+let k1LocationPositions=JSON.parse(localStorage.getItem('k1_location_positions_v20')||'{}');
+let k1LHomeBaseTarget='';
+function k1AllLocations(){return [...k1MapZones,...k1ExtraLocations]}
+function k1LocationName(id){return k1AllLocations().find(z=>z.id===id)?.name||''}
+function k1LocationSave(){localStorage.setItem('k1_extra_locations_v20',JSON.stringify(k1ExtraLocations));localStorage.setItem('k1_location_positions_v20',JSON.stringify(k1LocationPositions));k1FleetSave()}
+function k1LocationAdd(){
+ const name=prompt('New asset location (garage, parking lot, loading dock, etc.)');if(!name?.trim())return;
+ if(k1AllLocations().some(z=>z.name.toLowerCase()===name.trim().toLowerCase())){notify('Location already exists');return}
+ const z={id:'LOC-'+Date.now(),name:name.trim(),type:'Outdoor / fleet location',venue:'Boeing Center at Tech Port'};
+ k1ExtraLocations.push(z);k1LocationSave();k1RenderFleet();notify('Location created. Set its map position next.')
+}
+function k1LocationRename(){
+ const id=$('k1LocationSelect')?.value,z=k1AllLocations().find(z=>z.id===id);if(!z)return;
+ const name=prompt('Rename asset location',z.name);if(!name?.trim())return;
+ if(k1AllLocations().some(x=>x.id!==id&&x.name.toLowerCase()===name.trim().toLowerCase())){notify('Location name already exists');return}
+ const old=z.name;z.name=name.trim();
+ assets.filter(a=>a.location===old).forEach(a=>a.location=z.name);
+ k1Fleet.filter(v=>v.homeBaseId===id).forEach(v=>k1SyncVehicleAsset(v));
+ k1MapSave();persist();k1LocationSave();k1RenderFleet();notify('Location renamed across current asset records')
+}
+function k1LocationDelete(){
+ const id=$('k1LocationSelect')?.value,z=k1ExtraLocations.find(z=>z.id===id);if(!z){notify('Indoor floor-plan zones must be deleted through the Asset Map transfer workflow.');return}
+ const assigned=k1Fleet.filter(v=>v.homeBaseId===id),assetsHere=assets.filter(a=>a.location===z.name&&!k1Fleet.some(v=>v.id===a.id));
+ if(assigned.length||assetsHere.length){notify('Location has assigned assets. Reassign them before deletion.');return}
+ if(!confirm('Remove location '+z.name+'?'))return;
+ k1ExtraLocations=k1ExtraLocations.filter(x=>x.id!==id);delete k1LocationPositions[id];k1LocationSave();k1RenderFleet()
+}
+function k1LocationFocus(){
+ const p=k1LocationPositions[$('k1LocationSelect')?.value];if(p&&k1LMap)k1LMap.setView([p.lat,p.lng],18)
+}
+function k1LocationSetPoint(){
+ const id=$('k1LocationSelect')?.value;if(!id||!k1LMap){notify('Select a location and wait for map to load');return}
+ k1LHomeBaseTarget=id;k1LMode='homebase';$('k1LHint').textContent='Click the actual garage / parking spot location on the map to save this Asset Location.'
+}
+function k1LocationReturnVehicle(){
+ const id=$('k1LVehicle')?.value,v=k1Fleet.find(v=>v.id===id);
+ if(!v){notify('Select a vehicle first');return}
+ const p=k1LocationPositions[v.homeBaseId];if(!p){notify('Assign the vehicle a Home Base in Vehicle Profile and set that location on the map first');return}
+ k1LMoveVehicle(id,p.lat,p.lng);notify('Vehicle moved to assigned Home Base (simulated)')
+}
+function k1SyncVehicleAsset(v){
+ let a=assets.find(a=>a.id===v.id);if(!a){a={id:v.id,name:v.name,category:'Fleet Vehicle',status:'Operational',notes:'Fleet asset record'};assets.push(a)}
+ a.name=v.name;a.category='Fleet Vehicle';a.homeBaseId=v.homeBaseId||'';a.homeBase=k1LocationName(v.homeBaseId);a.location=a.homeBase||'Unassigned';a.currentLocation=v.location||'Unknown';a.serial=v.vin||'';a.model=[v.year,v.make,v.model].filter(Boolean).join(' ');
+ persist()
+}
+function k1MigrateFleetLocations(){
+ const legacy={'Venue Loading Dock':'Loading Dock','Venue Service Yard':'Service Yard','Venue Parking':'Parking Lot'};
+ for(const v of k1Fleet){
+  if(v.homeBaseId&&k1AllLocations().some(z=>z.id===v.homeBaseId)){k1SyncVehicleAsset(v);continue}
+  const name=legacy[v.location]||v.location||'';
+  if(!name||name==='Unspecified')continue;
+  let z=k1AllLocations().find(z=>z.name.toLowerCase()===name.toLowerCase());
+  if(!z){z={id:'LOC-'+Date.now()+'-'+Math.random().toString(36).slice(2,6),name,type:'Outdoor / fleet location',venue:'Boeing Center at Tech Port'};k1ExtraLocations.push(z)}
+  v.homeBaseId=z.id;k1SyncVehicleAsset(v)
+ }
+ k1LocationSave()
+}
+if(!localStorage.getItem('k1_fleet_locations_v20_migrated')){
+ try{k1MigrateFleetLocations();localStorage.setItem('k1_fleet_locations_v20_migrated','yes')}catch(e){console.warn('Fleet location migration',e)}
+}
 
 </script></body></html>
