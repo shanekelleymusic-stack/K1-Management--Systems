@@ -91,7 +91,7 @@ button,input,select,textarea{font:inherit}.app{max-width:520px;margin:auto;min-h
 </style><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"></head>
 <body><div class="app"><button id="mobileDrawerTab" type="button" aria-label="Open navigation menu" onclick="openDrawer()">☰</button>
 <aside class="desktopMenu"><div class="dmBrand">K1<br><small>MANAGEMENT SYSTEMS</small></div>
-<button type="button" onclick="return navHome()">⌂ Home</button><button type="button" onclick="resetWOFilters();go('workorders')">🛠 Work Orders</button><button type="button" onclick="go('requests')">☵ Maintenance Requests</button><button type="button" onclick="go('assets')">⚙ Assets</button><button type="button" onclick="go('assetGroups')">▦ Asset Groups</button><button type="button" onclick="go('fleet')">🚚 Fleet Management</button><button type="button" onclick="go('rfid')">⌁ RFID Tracking</button><button type="button" onclick="go('pm')">◴ Preventative Maintenance</button><button type="button" onclick="go('projects')">▥ Upgrades / Projects</button><button type="button" onclick="go('venues')">⌖ Venues</button><button type="button" onclick="go('reports')">▥ Reports</button><button type="button" onclick="go('inventory')">▣ Inventory</button><button type="button" onclick="go('vendors')">♟ Vendors</button><button type="button" onclick="go('calendar')">▦ Calendar</button><button type="button" onclick="go('users')">♙ Users</button><button type="button" onclick="go('settings')">⚙ Settings</button></aside><div id="drawerBackdrop" class="drawerBackdrop" onclick="closeDrawer()"></div>
+<button type="button" onclick="return navHome()">⌂ Home</button><button type="button" onclick="resetWOFilters();go('workorders')">🛠 Work Orders</button><button type="button" onclick="go('requests')">☵ Maintenance Requests</button><button type="button" onclick="go('assets')">⚙ Assets</button><button type="button" onclick="go('assetGroups')">▦ Asset Groups</button><button type="button" onclick="go('fleet')">🚚 Fleet Management</button><button type="button" onclick="go('rfid')">⌁ RFID Tracking</button><button type="button" onclick="go('pm')">◴ Preventative Maintenance</button><button type="button" onclick="go('projects')">▥ Upgrades / Projects</button><button type="button" onclick="go('venues')">⌖ Venues</button><button type="button" onclick="go('reports')">▥ Reports</button><button type="button" onclick="go('inventory')">▣ Inventory</button><button type="button" onclick="go('vendors')">♟ Vendors</button><button type="button" onclick="go('calendar')">▦ Calendar</button><button type="button" onclick="go('users')">♙ Users</button><button type="button" onclick="go('settings')">⚙ Settings</button><button type="button" onclick="go('systemBackup')">⇩ System Backup</button></aside><div id="drawerBackdrop" class="drawerBackdrop" onclick="closeDrawer()"></div>
 <header class="top"><div class="brand"><div class="brandmark">K1<small>MANAGEMENT SYSTEMS</small></div><div id="venueLogo" class="logo">BOEING<br>CENTER<br>AT TECH PORT</div></div>
 <select class="venue" id="venueSelect" onchange="notify('Venue changed to '+this.value)"><option>Boeing Center at Tech Port — San Antonio</option><option>Regional Venue — Dallas</option></select>
 <div style="text-align:right"><button type="button" class="btn alt" onclick="openNotifications()">🔔 <span id="notifCount">0</span></button></div><div class="uploads"><label>Venue logo<input id="logoUpload" type="file" accept="image/*"></label><label>Header photo<input id="headerUpload" type="file" accept="image/*"></label></div></header>
@@ -139,7 +139,7 @@ button,input,select,textarea{font:inherit}.app{max-width:520px;margin:auto;min-h
 
 <section id="scan" class="screen"><button type="button" class="btn alt" onclick="return navHome()">← Home</button><div class="moduleHero" style="margin-top:10px"><div class="eyebrow">ASSET TOOLS</div><h2>Scan Asset QR Code</h2><div>Camera integration placeholder</div></div><div class="card" style="text-align:center;padding:38px"><div style="font-size:70px">▦</div><h3>Point camera at asset QR code</h3><p class="small">For this prototype, choose an asset below to simulate a successful scan.</p><select id="scanAsset" style="width:100%;padding:11px"></select><button type="button" class="btn full" style="margin-top:12px" onclick="simulateScan()">Simulate Scan</button></div></section>
 
-<section id="pm" class="screen"></section><section id="projects" class="screen"></section><section id="venues" class="screen"></section><section id="reports" class="screen"></section><section id="inventory" class="screen"></section><section id="vendors" class="screen"></section><section id="calendar" class="screen"></section><section id="users" class="screen"></section><section id="settings" class="screen"></section><section id="fleet" class="screen"></section><section id="rfid" class="screen"></section><section id="more" class="screen"></section>
+<section id="systemBackup" class="screen"></section><section id="pm" class="screen"></section><section id="projects" class="screen"></section><section id="venues" class="screen"></section><section id="reports" class="screen"></section><section id="inventory" class="screen"></section><section id="vendors" class="screen"></section><section id="calendar" class="screen"></section><section id="users" class="screen"></section><section id="settings" class="screen"></section><section id="fleet" class="screen"></section><section id="rfid" class="screen"></section><section id="more" class="screen"></section>
 </main>
 <nav class="nav"><button type="button" onclick="return navHome()"><b>⌂</b>Home</button><button type="button" onclick="navWorkOrders()"><b>＋</b>Work Orders</button><button type="button" onclick="go('scan')"><b>▦</b>Scan QR</button><button type="button" onclick="go('requests')"><b>☵</b>Request</button><button type="button" onclick="go('more')"><b>☰</b>More</button></nav>
 </div><div id="modal" class="modal"><div class="sheet"><div id="modalBody"></div></div></div><div id="toast" class="toast"></div>
@@ -233,7 +233,8 @@ function go(id){
  if(id==="workorders"){navWorkOrders(false);return false}
  if(!activateScreen(id))return false;
  try{
-   if(id==="pm")renderPMScreen();
+   if(id==="systemBackup")k1BackupRender();
+    if(id==="pm")renderPMScreen();
    if(id==="requests")renderRequests();
    if(id==="assets")renderAssets();
    if(id==="assetLocations")renderAssetLocationMap();
@@ -449,10 +450,10 @@ function renderModules(){
  vendors:["Vendors","Contractors and service-provider management.",`<div class="row"><div class="grow"><strong>CoolAir Services</strong><div class="small">HVAC contractor</div></div></div><div class="row"><div class="grow"><strong>ABC Fire Systems</strong><div class="small">Kitchen / life-safety service</div></div></div><button type="button" class="btn" onclick="notify('Add vendor form is next-stage functionality')">＋ Add Vendor</button>`],
  calendar:["Calendar","Coordinate maintenance, contractors and venue event timelines.",`<button type="button" class="btn alt" onclick="return navHome()">← Home</button><div id="calendarWorkspace" style="margin-top:10px"></div>`],
  users:["Users","User accounts, roles and venue/location access.",`<div id="usersWorkspace"></div>`],
- settings:["Settings","Venue and application configuration.",`<div class="row"><div class="grow"><strong>Venue branding</strong><div class="small">Use the logo and header-photo controls at the top of the app.</div></div></div><div class="row"><div class="grow"><strong>Data storage</strong><div class="small">This prototype stores records in this browser using local storage.</div></div></div><button type="button" class="btn danger" onclick="resetDemo()">Reset Demo Data</button>`],
+ settings:["Settings","Venue and application configuration.",`<div class="row"><div class="grow"><strong>Venue branding</strong><div class="small">Use the logo and header-photo controls at the top of the app.</div></div></div><div class="row"><div class="grow"><strong>Data storage</strong><div class="small">This prototype stores records in this browser using local storage.</div></div></div><button type="button" class="btn alt" onclick="go('systemBackup')">⇩ System Backup & Restore</button><div style="height:12px"></div><button type="button" class="btn danger" onclick="resetDemo()">Reset Demo Data</button>`],
  rfid:["RFID Tracking","Asset tag registry, location scans and tracking alerts.",`<div id="k1RFIDWorkspace"></div>`],
  fleet:["Fleet Management","Vehicle registry, map, geofences, tracking events and maintenance.",`<div id="k1FleetWorkspace"></div>`],
- more:["More","K1 Management Systems modules.",`<div class="quick"><button type="button" class="btn alt" onclick="go('assetGroups')">Asset Groups</button><button class="btn alt" onclick="go('fleet')">Fleet Management</button><button type="button" class="btn alt" onclick="go('pm')">Preventative Maintenance</button><button type="button" class="btn alt" onclick="go('projects')">Upgrades / Projects</button><button type="button" class="btn alt" onclick="go('venues')">Venues</button><button type="button" class="btn alt" onclick="go('reports')">Reports</button><button type="button" class="btn alt" onclick="go('inventory')">Inventory</button><button type="button" class="btn alt" onclick="go('vendors')">Vendors</button><button type="button" class="btn alt" onclick="go('calendar')">Calendar</button><button type="button" class="btn alt" onclick="go('users')">Users</button><button type="button" class="btn alt" onclick="go('settings')">Settings</button></div>`]
+ more:["More","K1 Management Systems modules.",`<div class="quick"><button type="button" class="btn alt" onclick="go('assetGroups')">Asset Groups</button><button class="btn alt" onclick="go('fleet')">Fleet Management</button><button type="button" class="btn alt" onclick="go('pm')">Preventative Maintenance</button><button type="button" class="btn alt" onclick="go('projects')">Upgrades / Projects</button><button type="button" class="btn alt" onclick="go('venues')">Venues</button><button type="button" class="btn alt" onclick="go('reports')">Reports</button><button type="button" class="btn alt" onclick="go('inventory')">Inventory</button><button type="button" class="btn alt" onclick="go('vendors')">Vendors</button><button type="button" class="btn alt" onclick="go('calendar')">Calendar</button><button type="button" class="btn alt" onclick="go('users')">Users</button><button type="button" class="btn alt" onclick="go('settings')">Settings</button><button type="button" class="btn alt" onclick="go('systemBackup')">System Backup</button></div>`]
  };
  Object.entries(modules).forEach(([id,m])=>{const el=$(id);if(el)el.innerHTML=`<div class="moduleHero"><div class="eyebrow">K1 MANAGEMENT SYSTEMS</div><h2>${m[0]}</h2><div>${m[1]}</div></div>${m[2]}`});
  renderCalendar();
@@ -972,5 +973,95 @@ function k1BulkValidate(){
 function k1BulkErrorCSV(){const rows=[['Spreadsheet Row','Asset ID','Errors'],...k1BulkValidated.filter(r=>r.errors.length).map(r=>[r.line,r.values['Asset ID'],r.errors.join('; ')])];const csv=rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='K1_Asset_Import_Errors.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),2000)}
 function k1BulkNextAssetId(used){let n=1;for(const id of used){const m=/^ASSET-(\d+)$/i.exec(id);if(m)n=Math.max(n,Number(m[1])+1)}let candidate;do{candidate='ASSET-'+String(n++).padStart(6,'0')}while(used.has(candidate.toLowerCase()));used.add(candidate.toLowerCase());return candidate}
 function k1BulkConfirm(){if(!k1BulkValidated.length||k1BulkValidated.some(r=>r.errors.length)){notify('Resolve all import errors before confirming');return}const stamp=new Date().toISOString();let created=0,updated=0;const used=new Set([...assets.map(a=>String(a.id).toLowerCase()),...k1BulkValidated.map(r=>r.values['Asset ID'].toLowerCase()).filter(Boolean)]);for(const row of k1BulkValidated){const v=row.values;const newId=row.old?row.old.id:(v['Asset ID']||k1BulkNextAssetId(used));if(!row.old&&v['Asset ID'])used.add(newId.toLowerCase());const a=row.old||{id:newId,created:stamp};const mapping={'Asset Name':'name','Venue':'venue','Location':'location','Category':'category','Manufacturer':'manufacturer','Model':'model','Serial Number':'serial','Criticality':'criticality','Status':'status','Vendor':'vendor','Install Date':'installDate','Warranty Expiration':'warranty','Department':'department','Assigned To':'assignedTo','Notes':'notes'};for(const [header,prop] of Object.entries(mapping)){const val=row.normalized?.[header]||(header==='Install Date'||header==='Warranty Expiration'?k1BulkDate(v[header]):v[header]);if(val)a[prop]=val}if(!a.venue)a.venue=k1BulkVenue();if(!a.status)a.status='Operational';if(!a.criticality)a.criticality='Medium';if(row.old)updated++;else{assets.unshift(a);created++}}try{persist()}catch(e){notify('Storage full: unable to save all assets. Export a backup.');return}k1BulkValidated=[];k1BulkRows=[];closeModal();renderAssets();notify(`Import complete: ${created} created, ${updated} updated`)}
+
+
+/* K1 V24.1 — local browser backup, verification, and guarded restore. No network upload. */
+const K1_BACKUP_SCHEMA='k1-browser-backup';
+const K1_BACKUP_VERSION=1;
+let k1BackupCandidate=null;
+function k1BackupEligibleKey(key){
+ return /^k1_/i.test(key) && !/(password|secret|token|api.?key|auth|session|credential)/i.test(key);
+}
+function k1BackupSnapshot(){
+ const records={};
+ for(let i=0;i<localStorage.length;i++){
+  const key=localStorage.key(i);
+  if(k1BackupEligibleKey(key))records[key]=localStorage.getItem(key);
+ }
+ return records;
+}
+function k1BackupSummary(records){
+ const parse=(key)=>{try{return JSON.parse(records[key]||'null')}catch(e){return null}};
+ const count=(key)=>{const x=parse(key);return Array.isArray(x)?x.length:0};
+ const zones=parse('k1_map_zones'),extra=parse('k1_extra_locations_v20');
+ return {storageKeys:Object.keys(records).length,assets:count('k1_assets'),workOrders:count('k1_workorders'),requests:count('k1_requests'),users:count('k1_users'),mapZones:Array.isArray(zones)?zones.length:0,extraLocations:Array.isArray(extra)?extra.length:0,pmSchedules:count('k1_pm_schedules'),fleet:count('k1_fleet'),fleetAlerts:count('k1_fleet_alerts')};
+}
+function k1BackupMake(){const records=k1BackupSnapshot();return {format:K1_BACKUP_SCHEMA,schemaVersion:K1_BACKUP_VERSION,application:'K1 Management Systems',exportedAt:new Date().toISOString(),sourceOrigin:location.origin,summary:k1BackupSummary(records),records}}
+function k1BackupFile(data,filename){
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),15000);
+}
+function k1BackupDownload(){
+ try{
+  const data=k1BackupMake();
+  const stamp=data.exportedAt.slice(0,19).replace(/[T:]/g,'-');
+  k1BackupFile(data,'K1_Full_Browser_Backup_'+stamp+'.json');
+  notify('Backup downloaded. Keep this file somewhere safe.');
+  k1BackupRender();
+ }catch(e){console.error(e);alert('Backup could not be generated: '+e.message)}
+}
+function k1BackupRender(){
+ const el=$('systemBackup');if(!el)return;
+ const sum=k1BackupSummary(k1BackupSnapshot());
+ el.innerHTML=`<button type="button" class="btn alt" onclick="go('settings')">← Settings</button>
+ <div class="moduleHero" style="margin-top:12px"><div class="eyebrow">K1 MANAGEMENT SYSTEMS · V24.1</div><h2>System Backup & Restore</h2><div>Save this browser's K1 records before migrating to a shared database.</div></div>
+ <div class="card"><h3>Current browser data</h3><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(135px,1fr))">
+ ${Object.entries(sum).map(([k,v])=>`<div><div class="small">${esc(k.replace(/([A-Z])/g,' $1'))}</div><strong style="font-size:22px">${v}</strong></div>`).join('')}</div>
+ <p class="small">Counts reflect saved browser records, not demonstration defaults. Asset Map zones and extra fleet locations are counted separately and may overlap.</p>
+ <button type="button" class="btn full" onclick="k1BackupDownload()">⇩ Download Full JSON Backup</button>
+ <p class="small">Includes K1-prefixed browser records, including assets, work orders, location zones, floor-plan images, fleet incidents and settings when stored. Keys that appear to contain credentials or tokens are excluded. The file can contain sensitive operational and employee information—store it securely.</p></div>
+ <div class="card" style="margin-top:12px"><h3>Verify / Restore a Backup</h3>
+ <p class="small">Choose a K1 JSON backup to inspect its contents. Merely selecting a file will not change anything. Restore is intended for recovery, not merging records across computers.</p>
+ <input id="k1BackupFileInput" type="file" accept=".json,application/json" onchange="k1BackupInspect(this)" style="max-width:100%">
+ <div id="k1BackupPreview" style="margin-top:12px"></div></div>
+ <div class="note"><strong>Migration safety:</strong> Download the backup from the Mac that has the correct 34 locations. Do not reset Safari, clear website data, or restore another computer's data onto the Mac. A centralized database has not been connected yet.</div>`;
+ k1BackupCandidate=null;
+}
+async function k1BackupInspect(input){
+ const el=$('k1BackupPreview');k1BackupCandidate=null;
+ const file=input.files?.[0];if(!file)return;
+ if(file.size>40*1024*1024){el.textContent='Backup file exceeds 40 MB; please contact us before restoring.';return}
+ try{
+  const data=JSON.parse(await file.text());
+  if(!data||data.format!==K1_BACKUP_SCHEMA||data.schemaVersion!==K1_BACKUP_VERSION||!data.records||typeof data.records!=='object'||Array.isArray(data.records))throw Error('Not a supported K1 backup file');
+  const keys=Object.keys(data.records);
+  if(!keys.length||keys.length>1000)throw Error('Unexpected number of storage keys');
+  for(const key of keys){if(!k1BackupEligibleKey(key)||typeof data.records[key]!=='string')throw Error('Invalid or unsupported key: '+key)}
+  if(!data.records.k1_assets&&!data.records.k1_map_zones)throw Error('Backup is missing both asset and location records');
+  k1BackupCandidate=data;
+  const sum=k1BackupSummary(data.records),current=k1BackupSummary(k1BackupSnapshot());
+  el.innerHTML=`<div class="note"><strong>Backup verified for preview.</strong><div class="small">Created: ${esc(data.exportedAt||'Unknown')} · Origin: ${esc(data.sourceOrigin||'Unknown')}</div></div>
+  <div class="tableWrap"><table class="reportTable" style="min-width:390px"><thead><tr><th>Record type</th><th>Backup</th><th>This browser</th></tr></thead><tbody>
+  ${Object.keys(sum).map(k=>`<tr><td>${esc(k.replace(/([A-Z])/g,' $1'))}</td><td>${sum[k]}</td><td>${current[k]}</td></tr>`).join('')}</tbody></table></div>
+  <p class="small">Restoring replaces the matching K1 records in this browser and reloads the app. It does not merge records or update other devices. A safety backup is downloaded before changes.</p>
+  <button type="button" class="btn danger" onclick="k1BackupRestore()">Restore this backup (destructive)</button>`;
+ }catch(e){el.textContent='Unable to verify backup: '+e.message}
+}
+function k1BackupRestore(){
+ const data=k1BackupCandidate;if(!data){alert('Select and verify a backup first.');return}
+ const count=Object.keys(data.records).length;
+ if(!confirm('Restore '+count+' K1 browser records? This replaces existing K1 data on THIS device. Choose Cancel unless you intend to recover data.'))return;
+ const phrase=prompt('Type RESTORE to confirm. A safety backup of current data will download first.');
+ if(phrase!=='RESTORE')return;
+ try{
+  const safety=k1BackupMake();
+  k1BackupFile(safety,'K1_Pre_Restore_Safety_Backup_'+new Date().toISOString().slice(0,10)+'.json');
+  const before=k1BackupSnapshot();
+  try{
+   for(const [key,val] of Object.entries(data.records))localStorage.setItem(key,val);
+  }catch(e){for(const [key,val] of Object.entries(before)){try{localStorage.setItem(key,val)}catch(_){} }throw e}
+  alert('Restore complete. The app will reload. Keep your pre-restore safety backup.');location.reload();
+ }catch(e){console.error(e);alert('Restore failed: '+e.message+'; check browser storage and your safety backup.')}
+}
 
 </script><div id="k1FleetPopupBackdrop" role="dialog" aria-modal="true" aria-label="Fleet geofence alert"><div id="k1FleetPopup"></div></div></body></html>
